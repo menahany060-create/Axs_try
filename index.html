@@ -3209,6 +3209,8 @@
     let adminProductsData = []; // colors + stock loaded for admin
 
     function renderAdmin() {
+      // Start order polling + request notification permission
+      requestNotifPermission().then(() => startOrderPolling());
       const main = document.getElementById('main');
       main.innerHTML = `<div class="admin-wrap">
     <div class="admin-header">
@@ -4875,14 +4877,93 @@
     }
 
     function renderTrack() {
-      const steps = [tx('orderPlaced'), tx('processing'), tx('shipped'), tx('outForDelivery'), tx('delivered')];
+      const steps = S.lang === 'ar'
+        ? ['تم الطلب', 'قيد التجهيز', 'تم الشحن', 'تم التسليم']
+        : ['ORDER PLACED', 'PROCESSING', 'SHIPPED', 'DELIVERED'];
       const r = S.trackResult;
+      const isLoading = r === null && S.trackInput;
+
+      const resultHTML = () => {
+        if (isLoading) return `<div style="text-align:center;padding:40px"><div class="loading-spinner" style="margin:0 auto 12px"></div><div style="font-size:10px;color:#555;letter-spacing:3px">جاري البحث...</div></div>`;
+        if (r === false) return `<div style="background:var(--bg2);border:1px solid var(--border);padding:32px;text-align:center"><div style="font-size:32px;opacity:.15;margin-bottom:12px">✕</div><div style="font-size:13px;color:var(--text3);font-family:var(--fm);letter-spacing:2px">${S.lang === 'ar' ? 'رقم الأوردر غير صحيح أو غير موجود.' : 'Order not found. Check the number and try again.'}</div></div>`;
+        if (!r) return '';
+
+        const isCancelled = r.statusKey === 'cancelled';
+        const pct = isCancelled ? 0 : Math.min(100, (r.status / 3) * 100);
+
+        const statusColors = { 0: '#FF3B00', 1: '#FF8C00', 2: '#4a90e2', 3: '#4caf50' };
+        const statusColor = isCancelled ? '#f44336' : (statusColors[r.status] || A);
+
+        const itemsHTML = r.items.map(item => {
+          if (item.isBundle) {
+            return `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #111"><span style="color:${A};font-size:12px">▣ ${item.name}</span><span style="font-size:12px">${item.price} EGP</span></div>`;
+          }
+          const colorTxt = item.colorName ? ` — ${item.colorName}` : '';
+          return `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #111"><span style="font-size:12px">${item.name} (${item.size}${colorTxt}) ×${item.qty||1}</span><span style="font-size:12px">${(item.price*(item.qty||1))} EGP</span></div>`;
+        }).join('');
+
+        return `
+        <div style="background:var(--bg2);border:1px solid var(--border);overflow:hidden">
+          <!-- Header -->
+          <div style="background:#050505;padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+            <div>
+              <div style="font-size:9px;color:#555;letter-spacing:3px;font-family:var(--fm);margin-bottom:4px">رقم الأوردر</div>
+              <div style="font-family:var(--fd);font-size:22px;color:${A};letter-spacing:3px">${r.num}</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:9px;color:#555;letter-spacing:3px;font-family:var(--fm);margin-bottom:4px">تاريخ الطلب</div>
+              <div style="font-size:13px;color:var(--text2);font-family:var(--fm)">${r.date}</div>
+            </div>
+          </div>
+
+          <!-- Status badge -->
+          <div style="padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">
+            <div style="width:10px;height:10px;border-radius:50%;background:${statusColor};flex-shrink:0;${!isCancelled && r.status < 3 ? 'animation:pulse 1.5s infinite' : ''}"></div>
+            <div style="font-family:var(--fd);font-size:18px;letter-spacing:3px;color:${statusColor}">
+              ${isCancelled ? (S.lang === 'ar' ? 'ملغي' : 'CANCELLED') : steps[r.status] || steps[0]}
+            </div>
+            ${r.estimated && !isCancelled ? `<div style="margin-left:auto;font-size:10px;color:#555;font-family:var(--fm);letter-spacing:2px">التوصيل المتوقع: ${r.estimated}</div>` : ''}
+          </div>
+
+          ${!isCancelled ? `
+          <!-- Progress bar -->
+          <div style="padding:20px 24px;border-bottom:1px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+              ${steps.map((s, i) => `<div style="text-align:center;flex:1"><div style="width:28px;height:28px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:12px;background:${i <= r.status ? statusColors[i] || A : 'var(--bg3)'};border:2px solid ${i <= r.status ? statusColors[i] || A : 'var(--border)'};color:${i <= r.status ? '#fff' : '#555'}">${i < r.status ? '✓' : i === r.status ? '●' : '○'}</div><div style="font-size:8px;color:${i <= r.status ? 'var(--text)' : '#555'};letter-spacing:1px;font-family:var(--fm)">${s}</div></div>`).join('')}
+            </div>
+            <div style="height:3px;background:var(--bg3);border-radius:2px"><div style="height:100%;background:linear-gradient(90deg,${A},${statusColor});border-radius:2px;width:${pct}%;transition:width .6s ease"></div></div>
+          </div>` : ''}
+
+          <!-- Items -->
+          <div style="padding:20px 24px;border-bottom:1px solid var(--border)">
+            <div style="font-size:9px;color:#555;letter-spacing:3px;font-family:var(--fm);margin-bottom:12px">المنتجات</div>
+            ${itemsHTML}
+            <div style="display:flex;justify-content:space-between;padding-top:12px;margin-top:4px">
+              <span style="font-size:9px;color:#555;letter-spacing:3px;font-family:var(--fm)">الإجمالي</span>
+              <span style="font-family:var(--fd);font-size:20px">${r.total} EGP</span>
+            </div>
+          </div>
+
+          <!-- Delivery info -->
+          <div style="padding:20px 24px">
+            <div style="font-size:9px;color:#555;letter-spacing:3px;font-family:var(--fm);margin-bottom:12px">بيانات التوصيل</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div><div style="font-size:9px;color:#555;letter-spacing:2px;font-family:var(--fm);margin-bottom:3px">الاسم</div><div style="font-size:12px;color:var(--text2)">${r.name}</div></div>
+              <div><div style="font-size:9px;color:#555;letter-spacing:2px;font-family:var(--fm);margin-bottom:3px">الموبايل</div><div style="font-size:12px;color:var(--text2)">${r.phone}</div></div>
+              <div style="grid-column:1/-1"><div style="font-size:9px;color:#555;letter-spacing:2px;font-family:var(--fm);margin-bottom:3px">العنوان</div><div style="font-size:12px;color:var(--text2)">${r.address}، ${r.city}، ${r.governorate}</div></div>
+            </div>
+          </div>
+        </div>`;
+      };
+
       return `<div style="max-width:640px;margin:0 auto;padding:48px 24px">
     <div class="section-tag">04 — TRACKING</div>
-    <div class="section-title" style="font-size:52px;margin-bottom:32px">${tx('trackOrder').toUpperCase()}</div>
-    <div style="display:flex;gap:0;margin-bottom:32px"><input id="track-input" class="field" style="flex:1;border-right:none" placeholder="${tx('enterOrder')}" value="${S.trackInput}" oninput="S.trackInput=this.value" onkeydown="if(event.key==='Enter')doTrack()"><button class="btn" style="flex-shrink:0;padding:14px 24px" onclick="doTrack()">${tx('track')}</button></div>
-    ${S.trackResult === false ? `<div style="background:var(--bg2);border:1px solid var(--border);padding:24px;text-align:center"><div style="font-size:24px;opacity:.2;margin-bottom:12px">✕</div><div style="font-size:13px;color:var(--text3);font-family:var(--fm);letter-spacing:2px">${S.lang === 'ar' ? 'رقم الأوردر غير صحيح.' : 'Order not found.'}</div></div>` : ''}
-    ${r && r !== false ? `<div style="background:var(--bg2);border:1px solid var(--border);padding:24px"><div style="display:flex;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px"><div><div class="section-tag">ORDER NUMBER</div><div style="font-family:var(--fd);font-size:24px;color:${A};letter-spacing:3px">${r.num}</div></div><div><div class="section-tag">PLACED ON</div><div style="font-size:13px;font-family:var(--fm);color:var(--text2)">${r.date}</div></div></div><div style="margin-bottom:8px"><div class="track-progress">${steps.map((s, i) => `<div class="track-step"><div class="track-dot" style="background:${i <= r.status ? A : 'var(--bg3)'};border:2px solid ${i <= r.status ? A : 'var(--border)'};color:${i <= r.status ? '#fff' : 'var(--text3)'}">${i < r.status ? '✓' : i === r.status ? '●' : '○'}</div><div class="track-label" style="color:${i <= r.status ? 'var(--text)' : 'var(--text3)'}">${s.toUpperCase()}</div></div>`).join('')}</div><div class="track-bar"><div class="track-bar-fill" style="width:${(r.status / 4) * 100}%"></div></div></div><div style="display:flex;gap:14px;align-items:center;border-top:1px solid var(--border);padding-top:16px"><div style="width:64px;height:64px;flex-shrink:0;border:1px solid var(--border);overflow:hidden">${pv(r.product, 64, 0)}</div><div><div style="font-family:var(--fd);font-size:16px;letter-spacing:2px">${r.product.name.toUpperCase()}</div>${r.status < 4 ? `<div style="font-size:10px;color:var(--text3);font-family:var(--fm);margin-top:4px;letter-spacing:2px">${S.lang === 'ar' ? 'التوصيل المتوقع:' : 'Estimated:'} ${r.estimated}</div>` : `<div style="font-size:10px;color:#4caf50;font-family:var(--fm);margin-top:4px;letter-spacing:2px">✓ DELIVERED</div>`}</div></div></div>` : ''}
+    <div class="section-title" style="font-size:52px;margin-bottom:32px">${S.lang === 'ar' ? 'تتبع الأوردر' : 'TRACK ORDER'}</div>
+    <div style="display:flex;gap:0;margin-bottom:24px">
+      <input id="track-input" class="field" style="flex:1;border-right:none" placeholder="${S.lang === 'ar' ? 'أدخل رقم الأوردر — مثال: AXS-2024-001' : 'Enter order number — e.g. AXS-2024-001'}" value="${S.trackInput || ''}" oninput="S.trackInput=this.value" onkeydown="if(event.key==='Enter')doTrack()">
+      <button class="btn" style="flex-shrink:0;padding:14px 24px" onclick="doTrack()">${S.lang === 'ar' ? 'تتبع' : 'TRACK'}</button>
+    </div>
+    ${resultHTML()}
   </div>`;
     }
 
@@ -5116,6 +5197,8 @@
       document.getElementById('ann-bar').style.display = '';
       document.getElementById('navbar').style.display = '';
       document.getElementById('social-hub').style.display = '';
+      // Stop order polling when leaving admin
+      stopOrderPolling();
       S.page = page;
       if (page !== 'product') { S.size = null; S.qty = 1; S.imgIdx = 0; S.accordion = null; }
       if (page !== 'bundle') { S.bundleId = null; }
@@ -5321,14 +5404,46 @@ ${itemsStr}
       }
     }
 
-    function doTrack() {
-      const q = S.trackInput.trim(); if (!q) return;
-      if (q.toUpperCase().startsWith('AXS-')) {
-        const code = q.charCodeAt(q.length - 1); const status = code % 4; const product = PRODUCTS[code % PRODUCTS.length];
-        const estimated = new Date(Date.now() + (3 - status) * 86400000).toLocaleDateString(S.lang === 'ar' ? 'ar-EG' : 'en-GB', { day: 'numeric', month: 'short' });
-        const date = new Date(Date.now() - status * 86400000 * 1.5).toLocaleDateString(S.lang === 'ar' ? 'ar-EG' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-        S.trackResult = { num: q.toUpperCase(), status, product, estimated, date };
-      } else { S.trackResult = false; }
+    async function doTrack() {
+      const q = S.trackInput.trim();
+      if (!q) return;
+      S.trackResult = null; // loading state
+      render();
+      try {
+        const rows = await supabaseFetch('orders', `order_num=eq.${encodeURIComponent(q.toUpperCase())}&limit=1`);
+        if (Array.isArray(rows) && rows.length > 0) {
+          const o = rows[0];
+          const statusMap = { new: 0, confirmed: 1, shipped: 2, delivered: 3, cancelled: -1 };
+          const statusIdx = statusMap[o.status] ?? 0;
+          const items = Array.isArray(o.items) ? o.items : JSON.parse(o.items || '[]');
+          const date = o.created_at
+            ? new Date(o.created_at).toLocaleDateString(S.lang === 'ar' ? 'ar-EG' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+            : '—';
+          const estimated = o.status === 'delivered' ? null
+            : new Date(Date.now() + Math.max(1, 3 - statusIdx) * 86400000)
+                .toLocaleDateString(S.lang === 'ar' ? 'ar-EG' : 'en-GB', { day: 'numeric', month: 'short' });
+          S.trackResult = {
+            num: o.order_num,
+            status: statusIdx,
+            statusKey: o.status,
+            items,
+            total: o.total,
+            shipping: o.shipping,
+            address: o.address,
+            city: o.city,
+            governorate: o.governorate,
+            payment: o.payment_method,
+            date,
+            estimated,
+            name: o.customer_name,
+            phone: o.phone
+          };
+        } else {
+          S.trackResult = false;
+        }
+      } catch(e) {
+        S.trackResult = false;
+      }
       render();
     }
 
@@ -5356,6 +5471,74 @@ ${itemsStr}
       }
       const msg = `🛍️ أوردر جديد — ${od.order_num}\n\n👤 ${od.customer_name}\n📞 ${od.phone}\n📍 ${od.address}، ${od.city}، ${od.governorate}\n\nالمنتجات:\n${itemsStr}\n\n🚚 شحن: ${od.shipping} EGP${od.cod_fee > 0 ? `\n💵 رسوم كاش: ${od.cod_fee} EGP` : ''}${od.discount > 0 ? `\n🎁 خصم: ${od.discount * 100}%` : ''}\n💰 الإجمالي: ${od.total} EGP\n💳 الدفع: ${payLabel}${payProof}`;
       window.open(`https://wa.me/+201066025845?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // ADMIN NOTIFICATIONS — Supabase Realtime polling (tab must be open)
+    // ═══════════════════════════════════════════════════════════════════════════════
+    let _notifInterval = null;
+    let _lastOrderCount = null;
+    let _notifGranted = false;
+
+    async function requestNotifPermission() {
+      if (!('Notification' in window)) return;
+      if (Notification.permission === 'granted') { _notifGranted = true; return; }
+      if (Notification.permission !== 'denied') {
+        const perm = await Notification.requestPermission();
+        _notifGranted = perm === 'granted';
+      }
+    }
+
+    function startOrderPolling() {
+      if (_notifInterval) return; // already running
+      _notifInterval = setInterval(async () => {
+        try {
+          const rows = await supabaseFetch('orders', 'order=created_at.desc&limit=1&select=id,order_num,customer_name,total,created_at');
+          if (!Array.isArray(rows) || !rows.length) return;
+          const latest = rows[0];
+          // First run — just record
+          if (_lastOrderCount === null) { _lastOrderCount = latest.id; return; }
+          // New order came in
+          if (latest.id !== _lastOrderCount) {
+            _lastOrderCount = latest.id;
+            showOrderNotification(latest);
+          }
+        } catch(e) {}
+      }, 30000); // check every 30 seconds
+    }
+
+    function stopOrderPolling() {
+      if (_notifInterval) { clearInterval(_notifInterval); _notifInterval = null; }
+    }
+
+    function showOrderNotification(order) {
+      // In-app toast always
+      addToast(`🛍️ أوردر جديد! ${order.customer_name} — ${order.total} EGP`, 'success');
+      // Play sound
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator(); const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+        osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.4);
+      } catch(e) {}
+      // Browser notification
+      if (_notifGranted && Notification.permission === 'granted') {
+        try {
+          const n = new Notification('🛍️ أوردر جديد — AXS', {
+            body: `${order.customer_name} · ${order.total} EGP
+${order.order_num}`,
+            icon: '/favicon.ico',
+            badge: '/favicon.ico',
+            tag: 'new-order',
+            requireInteraction: true
+          });
+          n.onclick = () => { window.focus(); navigate('admin'); n.close(); };
+        } catch(e) {}
+      }
     }
 
     // ═══════════════════════════════════════════════════════════════════════════════
