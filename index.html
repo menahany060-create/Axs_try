@@ -3197,7 +3197,7 @@
     // ═══════════════════════════════════════════════════════════════════════════════
     // ADMIN
     // ═══════════════════════════════════════════════════════════════════════════════
-    const ADMIN_PASS = 'mena 2008';
+    // Admin password is stored in Supabase settings — not in code
     const STATUSES = ['new', 'confirmed', 'shipped', 'delivered', 'cancelled'];
     const STATUS_LABELS_AR = { new: 'جديد', confirmed: 'مؤكد', shipped: 'تم الشحن', delivered: 'تم التسليم', cancelled: 'ملغي' };
     let adminOrders = [];
@@ -4092,15 +4092,29 @@
       setTimeout(() => document.getElementById('admin-pass-input')?.focus(), 100);
     }
 
-    function checkAdminPass() {
-      const val = document.getElementById('admin-pass-input')?.value || '';
-      if (val === ADMIN_PASS) {
-        sessionStorage.setItem('axs_admin', '1');
-        renderAdmin();
-      } else {
-        document.getElementById('admin-pass-err').textContent = 'باسورد غلط — حاول تاني';
-        document.getElementById('admin-pass-input').value = '';
-        document.getElementById('admin-pass-input').focus();
+    async function checkAdminPass() {
+      const val = document.getElementById('admin-pass-input')?.value?.trim() || '';
+      if (!val) return;
+      const btn = document.querySelector('.admin-btn.btn-full');
+      const errEl = document.getElementById('admin-pass-err');
+      if (btn) { btn.disabled = true; btn.textContent = '...'; }
+      if (errEl) errEl.textContent = '';
+      try {
+        // Fetch admin_password from Supabase settings
+        const rows = await supabaseFetch('settings', 'key=eq.admin_password');
+        const stored = Array.isArray(rows) && rows[0] ? rows[0].value : null;
+        if (stored && val === stored) {
+          sessionStorage.setItem('axs_admin', '1');
+          renderAdmin();
+        } else {
+          if (errEl) errEl.textContent = 'باسورد غلط — حاول تاني';
+          const input = document.getElementById('admin-pass-input');
+          if (input) { input.value = ''; input.focus(); }
+        }
+      } catch(e) {
+        if (errEl) errEl.textContent = 'خطأ في الاتصال — حاول تاني';
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'ENTER →'; }
       }
     }
 
