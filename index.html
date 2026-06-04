@@ -3053,9 +3053,9 @@
 
   <div id="ann-bar">
     <div class="ann-track">
-      <span>FREE SHIPPING OVER 1500 EGP &nbsp;·&nbsp; DROP 001 — PHANTOM ERA &nbsp;·&nbsp; USE CODE AXS10 FOR 10%
+      <span>FREE SHIPPING OVER 1500 EGP &nbsp;·&nbsp; DROP 001 — PHANTOM ERA &nbsp;·&nbsp; USE CODE AXS5 FOR 5%
         OFF &nbsp;·&nbsp; CASH ON DELIVERY AVAILABLE &nbsp;·&nbsp; </span>
-      <span>FREE SHIPPING OVER 1500 EGP &nbsp;·&nbsp; DROP 001 — PHANTOM ERA &nbsp;·&nbsp; USE CODE AXS10 FOR 10%
+      <span>FREE SHIPPING OVER 1500 EGP &nbsp;·&nbsp; DROP 001 — PHANTOM ERA &nbsp;·&nbsp; USE CODE AXS5 FOR 5%
         OFF &nbsp;·&nbsp; CASH ON DELIVERY AVAILABLE &nbsp;·&nbsp; </span>
     </div>
   </div>
@@ -4105,7 +4105,7 @@
       }
       body.innerHTML = filtered.map(o => {
         const items = o.items ? (Array.isArray(o.items) ? o.items : JSON.parse(o.items)) : [];
-        const itemsSummary = items.map(i => i.isBundle ? `▣ ${i.name}` : `${i.name} (${i.size || ''}) ×${i.qty || 1}`).join('<br>');
+        const itemsSummary = items.map(i => i.isBundle ? `▣ ${i.name}` : `${i.name} (${i.size || ''}${i.colorName ? ` — ${i.colorName}` : ''}) ×${i.qty || 1}`).join('<br>');
         const payMap = { instapay: 'Instapay', vodafone: 'Vodafone', cash: 'كاش' };
         const payLabel = payMap[o.payment_method] || o.payment_method || '—';
         const date = o.created_at ? new Date(o.created_at).toLocaleDateString('ar-EG', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
@@ -4164,7 +4164,7 @@
         if (i.isBundle) {
           return `<div style="margin-bottom:8px"><span style="color:var(--A);font-size:10px">▣ ${i.name} (BUNDLE)</span> — <span style="color:#fff;font-family:'Bebas Neue',sans-serif">${i.price} EGP</span>${i.bundleItems ? '<div style="padding-left:12px;margin-top:4px">' + i.bundleItems.map(bi => `<div style="font-size:9px;color:#555">· ${bi.name} (${bi.size})</div>`).join('') + '</div>' : ''}</div>`;
         }
-        return `<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#bbb;font-size:11px">${i.name || ''} (${i.size || ''}) ×${i.qty || 1}</span><span style="color:#fff;font-family:'Bebas Neue',sans-serif">${((i.price || 0) * (i.qty || 1)).toLocaleString()} EGP</span></div>`;
+        return `<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#bbb;font-size:11px">${i.name || ''} (${i.size || ''}${i.colorName ? ` — <span style="color:${i.colorHex || '#aaa'}">●</span> ${i.colorName}` : ''}) ×${i.qty || 1}</span><span style="color:#fff;font-family:'Bebas Neue',sans-serif">${((i.price || 0) * (i.qty || 1)).toLocaleString()} EGP</span></div>`;
       }).join('')}
       <div style="border-top:1px solid #1a1a1a;margin-top:10px;padding-top:10px">
         ${o.shipping > 0 ? `<div style="display:flex;justify-content:space-between;font-size:10px;color:#555;margin-bottom:4px"><span>شحن</span><span>${o.shipping} EGP</span></div>` : ''}
@@ -4301,7 +4301,7 @@
     const SALE_END = '2025-07-01T23:59:59';
     const COD_FEE = 25;
     const SOLD_OUT = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false };
-    const IG_PAGE_LINK = 'https://www.instagram.com/axs.official';
+    const IG_PAGE_LINK = 'https://www.instagram.com/axs.eg';
     const IG_POSTS = [
       { productIdx: 0, likes: '2.4K', comments: '89', link: 'https://www.instagram.com/p/YOUR_POST_1/' },
       { productIdx: 3, likes: '3.1K', comments: '142', link: 'https://www.instagram.com/p/YOUR_POST_2/' },
@@ -4313,10 +4313,10 @@
 
     const PRODUCTS = [
       { id: 1, name: 'AXS phantom tee', nameAr: 'فانتوم تيشيرت', category: 'T-SHIRTS', price: 500, oldPrice: 690, badge: 'DROP 001', rating: 4.7, reviewCount: 31, sizes: ['M', 'L', 'XL', 'XXL'], stock: { M: 8, L: 5, XL: 2, XXL: 1 }, desc: '100% heavy cotton - oversized fit - screen print.', descAr: 'قطن ثقيل 100%. قياس oversized. طباعة سكرين.', details: ['100% heavy cotton', 'Oversized fit', 'Screen print', 'Dropped shoulder', 'Garment washed'], detailsAr: ['قطن ثقيل 100%', 'قياس oversized', 'طباعة سكرين', 'كتف منخفض', 'مغسول'], bgFrom: '#040410', bgTo: '#000003', wm: '#07071a', related: [4, 6, 2] },
-      { id: 2, name: 'Voidwash Denim', nameAr: 'جينز Voidwash', category: 'PANTS', price: 820, oldPrice: 1000, badge: 'NEW', rating: 4.5, reviewCount: 18, sizes: ['M', 'L', 'XL'], stock: { M: 4, L: 7, XL: 3 }, desc: 'Baggy silhouette acid-washed to near-black. Raw hem. Wide leg.', descAr: 'سيلويت baggy مغسول حمضياً. حاشية خام. رجل واسعة.', details: ['100% cotton denim', 'Acid-wash finish', 'Wide-leg silhouette', 'Raw hem', 'Front+back pockets'], detailsAr: ['100% قطن دنيم', 'تشطيب acid-wash', 'سيلويت wide-leg', 'حاشية خام', 'جيوب أمامية وخلفية'], bgFrom: '#060810', bgTo: '#020306', wm: '#0a0c1c', related: [5, 1, 3] },
+      { id: 2, name: 'Voidwash Denim', nameAr: 'جينز Voidwash', category: 'T-SHIRTS', price: 820, oldPrice: 1000, badge: 'NEW', rating: 4.5, reviewCount: 18, sizes: ['M', 'L', 'XL'], stock: { M: 4, L: 7, XL: 3 }, desc: 'Baggy silhouette acid-washed to near-black. Raw hem. Wide leg.', descAr: 'سيلويت baggy مغسول حمضياً. حاشية خام. رجل واسعة.', details: ['100% cotton denim', 'Acid-wash finish', 'Wide-leg silhouette', 'Raw hem', 'Front+back pockets'], detailsAr: ['100% قطن دنيم', 'تشطيب acid-wash', 'سيلويت wide-leg', 'حاشية خام', 'جيوب أمامية وخلفية'], bgFrom: '#060810', bgTo: '#020306', wm: '#0a0c1c', related: [5, 1, 3] },
       { id: 3, name: 'AXS Logo Cap', nameAr: 'كاب AXS', category: 'ACCESSORIES', price: 200, oldPrice: 300, badge: null, rating: 4.2, reviewCount: 44, sizes: ['ONE SIZE'], stock: { 'ONE SIZE': 15 }, desc: '6-panel structured cap. Tonal embroidered AXS logo. Adjustable strap.', descAr: 'كاب 6 ألواح مُهيكل. شعار AXS مطرز.', details: ['100% cotton twill', 'Structured 6-panel', 'Tonal embroidered logo', 'Adjustable snapback', 'One size fits most'], detailsAr: ['100% قطن تويل', '6 ألواح مُهيكلة', 'شعار مطرز', 'snapback قابل للتعديل', 'مقاس موحد'], bgFrom: '#0a0a0a', bgTo: '#030303', wm: '#141414', related: [1, 4, 6] },
-      { id: 4, name: 'Cropped Zip Hood', nameAr: 'هودي كروبد', category: 'HOODIES', price: 870, oldPrice: null, badge: 'LIMITED', rating: 4.8, reviewCount: 24, sizes: ['M', 'L', 'XL', 'XXL'], stock: { M: 2, L: 1, XL: 3, XXL: 1 }, desc: 'Cropped fit. Full zip. White contrast stitching on black. Limited run.', descAr: 'قياس كروبد. زيب كامل. خياطة بيضاء تباينية.', details: ['360gsm cotton', 'Cropped silhouette', 'YKK full zip', 'White contrast stitching', 'Fitted ribbed hem'], detailsAr: ['قطن 360gsm', 'سيلويت كروبد', 'زيب YKK كامل', 'خياطة بيضاء تباينية', 'حاشية مضلعة'], bgFrom: '#101010', bgTo: '#040404', wm: '#1a1a1a', related: [1, 2, 6] },
-      { id: 5, name: 'wide leg pants', nameAr: 'وايد ليج سويت بانتس ', category: 'PANTS', price: 400, oldPrice: 550, badge: 'NEW', rating: 4.6, reviewCount: 12, sizes: ['M', 'L', 'XL', 'XXL'], stock: { M: 9, L: 4, XL: 5, XXL: 3 }, desc: '100% Egyption cotton. oversized fit. Heavy cotton.', descAr: '100% قطن مصري. مقاس كبير. قطن ثقيل.', details: ['Heavy cotton twill', 'Relaxed tapered fit', '6 pockets total', 'Adjustable ankle cord', 'YKK zippers'], detailsAr: ['تويل قطن ثقيل', 'قياس tapered مريح', '6 جيوب', 'حبل كاحل قابل للتعديل', 'سحابات YKK'], bgFrom: '#080a05', bgTo: '#030402', wm: '#0f1208', related: [2, 1, 6] },
+      { id: 4, name: 'Cropped Zip Hood', nameAr: 'هودي كروبد', category: 'T-SHIRTS', price: 870, oldPrice: null, badge: 'LIMITED', rating: 4.8, reviewCount: 24, sizes: ['M', 'L', 'XL', 'XXL'], stock: { M: 2, L: 1, XL: 3, XXL: 1 }, desc: 'Cropped fit. Full zip. White contrast stitching on black. Limited run.', descAr: 'قياس كروبد. زيب كامل. خياطة بيضاء تباينية.', details: ['360gsm cotton', 'Cropped silhouette', 'YKK full zip', 'White contrast stitching', 'Fitted ribbed hem'], detailsAr: ['قطن 360gsm', 'سيلويت كروبد', 'زيب YKK كامل', 'خياطة بيضاء تباينية', 'حاشية مضلعة'], bgFrom: '#101010', bgTo: '#040404', wm: '#1a1a1a', related: [1, 2, 6] },
+      { id: 5, name: 'wide leg pants', nameAr: 'وايد ليج سويت بانتس ', category: 'T-SHIRTS', price: 400, oldPrice: 550, badge: 'NEW', rating: 4.6, reviewCount: 12, sizes: ['M', 'L', 'XL', 'XXL'], stock: { M: 9, L: 4, XL: 5, XXL: 3 }, desc: '100% Egyption cotton. oversized fit. Heavy cotton.', descAr: '100% قطن مصري. مقاس كبير. قطن ثقيل.', details: ['Heavy cotton twill', 'Relaxed tapered fit', '6 pockets total', 'Adjustable ankle cord', 'YKK zippers'], detailsAr: ['تويل قطن ثقيل', 'قياس tapered مريح', '6 جيوب', 'حبل كاحل قابل للتعديل', 'سحابات YKK'], bgFrom: '#080a05', bgTo: '#030402', wm: '#0f1208', related: [2, 1, 6] },
       { id: 6, name: 'Oversized Tee', nameAr: 'تيشيرت أوفرسايز', category: 'T-SHIRTS', price: 450, oldPrice: 550, badge: null, rating: 4.7, reviewCount: 67, sizes: ['M', 'L', 'XL', 'XXL'], stock: { M: 20, L: 15, XL: 8, XXL: 4 }, desc: '240gsm cotton. Boxy cut. Garment-dyed black. Back graphic print.', descAr: 'قطن 240gsm. قطع boxy. مصبوغ أسود.', details: ['240gsm cotton', 'Boxy oversized cut', 'Garment-dyed', 'Back graphic print', 'Dropped shoulder'], detailsAr: ['قطن 240gsm', 'قطع boxy oversized', 'مصبوغ بعد التصنيع', 'طباعة خلفية', 'كتف منخفض'], bgFrom: '#080808', bgTo: '#020202', wm: '#111', related: [1, 3, 4] },
     ];
 
@@ -4396,35 +4396,35 @@
       { s: 'XL', chest: '100-104', waist: '84-88', hip: '104-108', len: '73' }, { s: 'XXL', chest: '104-108', waist: '88-92', hip: '108-112', len: '75' },
     ];
 
-    const PROMOS = { AXS10: 0.10, AXS20: 0.20, WELCOME: 0.15, FIRSTORDER: 0.12 };
+    const PROMOS = { AXS5: 0.05, AXS20: 0.20, WELCOME: 0.15, FIRSTORDER: 0.12 };
     const GOVERNORATES = [
-      { name: 'القاهرة', fee: 60, cities: ['مدينة نصر', 'المعادي', 'مصر الجديدة', 'عين شمس', 'الزيتون', 'شبرا', 'التجمع الخامس', 'حلوان', 'المقطم', 'وسط البلد'] },
-      { name: 'الجيزة', fee: 60, cities: ['الدقي', 'المهندسين', '6 أكتوبر', 'الشيخ زايد', 'فيصل', 'بولاق الدكرور', 'إمبابة', 'الهرم', 'الوراق'] },
-      { name: 'القليوبية', fee: 65, cities: ['شبرا الخيمة', 'بنها', 'قليوب', 'كفر شكر', 'طوخ', 'القناطر الخيرية'] },
-      { name: 'الإسكندرية', fee: 70, cities: ['المنتزه', 'سيدي بشر', 'العجمي', 'برج العرب', 'الدخيلة', 'العامرية', 'المعمورة', 'كليوباترا'] },
-      { name: 'الغربية', fee: 65, cities: ['طنطا', 'المحلة الكبرى', 'كفر الزيات', 'زفتى', 'السنطة', 'بسيون'] },
-      { name: 'الدقهلية', fee: 65, cities: ['المنصورة', 'دكرنس', 'ميت غمر', 'السنبلاوين', 'أجا', 'طلخا', 'شربين'] },
-      { name: 'الشرقية', fee: 65, cities: ['الزقازيق', 'العاشر من رمضان', 'بلبيس', 'منيا القمح', 'ههيا', 'أبو حماد'] },
-      { name: 'المنوفية', fee: 65, cities: ['شبين الكوم', 'مينوف', 'أشمون', 'السادات', 'قويسنا', 'بركة السبع'] },
-      { name: 'البحيرة', fee: 65, cities: ['دمنهور', 'كفر الدوار', 'رشيد', 'إيتاي البارود', 'أبو حمص', 'وادي النطرون'] },
-      { name: 'كفر الشيخ', fee: 65, cities: ['كفر الشيخ', 'دسوق', 'فوه', 'بلطيم', 'سيدي سالم', 'الحامول'] },
-      { name: 'دمياط', fee: 65, cities: ['دمياط', 'رأس البر', 'الزرقا', 'فارسكور', 'كفر سعد'] },
-      { name: 'الإسماعيلية', fee: 65, cities: ['الإسماعيلية', 'القنطرة', 'فايد', 'أبو صوير'] },
-      { name: 'الفيوم', fee: 65, cities: ['الفيوم', 'طامية', 'سنورس', 'إطسا', 'يوسف الصديق'] },
-      { name: 'بني سويف', fee: 60, cities: ['بني سويف', 'الفشن', 'ناصر', 'إهناسيا', 'ببا', 'سمسطا'] },
-      { name: 'المنيا', fee: 60, cities: ['المنيا', 'ملوي', 'سمالوط', 'مغاغة', 'أبو قرقاص'] },
-      { name: 'بورسعيد', fee: 60, cities: ['بورسعيد', 'بور فؤاد'] },
-      { name: 'السويس', fee: 60, cities: ['السويس', 'عتاقة', 'السخنة'] },
-      { name: 'سوهاج', fee: 40, cities: ['سوهاج', 'أخميم', 'جرجا', 'طما', 'طهطا', 'البلينا'] },
-      { name: 'أسيوط', fee: 40, cities: ['أسيوط', 'ديروط', 'منفلوط', 'القوصية', 'أبنوب', 'أبو تيج'] },
-      { name: 'قنا', fee: 60, cities: ['قنا', 'نجع حمادي', 'أبو تشت', 'قفط', 'دشنا'] },
-      { name: 'الأقصر', fee: 80, cities: ['الأقصر', 'إسنا', 'أرمنت', 'القرنة'] },
-      { name: 'أسوان', fee: 85, cities: ['أسوان', 'كوم أمبو', 'إدفو', 'نصر النوبة', 'دراو'] },
-      { name: 'البحر الأحمر', fee: 75, cities: ['الغردقة', 'سفاجا', 'القصير', 'مرسى علم', 'رأس غارب'] },
-      { name: 'شمال سيناء', fee: 95, cities: ['العريش', 'الشيخ زويد', 'رفح', 'بئر العبد'] },
-      { name: 'جنوب سيناء', fee: 90, cities: ['شرم الشيخ', 'دهب', 'طابا', 'نويبع', 'أبو رديس'] },
-      { name: 'مطروح', fee: 80, cities: ['مرسى مطروح', 'العلمين', 'سيوه', 'الضبعة'] },
-      { name: 'الوادي الجديد', fee: 85, cities: ['الخارجة', 'الداخلة', 'الفرافرة', 'باريس'] },
+      { name: 'القاهرة', fee: 90, cities: ['مدينة نصر', 'المعادي', 'مصر الجديدة', 'عين شمس', 'الزيتون', 'شبرا', 'التجمع الخامس', 'حلوان', 'المقطم', 'وسط البلد'] },
+      { name: 'الجيزة', fee: 90, cities: ['الدقي', 'المهندسين', '6 أكتوبر', 'الشيخ زايد', 'فيصل', 'بولاق الدكرور', 'إمبابة', 'الهرم', 'الوراق'] },
+      { name: 'القليوبية', fee: 90, cities: ['شبرا الخيمة', 'بنها', 'قليوب', 'كفر شكر', 'طوخ', 'القناطر الخيرية'] },
+      { name: 'الإسكندرية', fee: 90, cities: ['المنتزه', 'سيدي بشر', 'العجمي', 'برج العرب', 'الدخيلة', 'العامرية', 'المعمورة', 'كليوباترا'] },
+      { name: 'الغربية', fee: 90, cities: ['طنطا', 'المحلة الكبرى', 'كفر الزيات', 'زفتى', 'السنطة', 'بسيون'] },
+      { name: 'الدقهلية', fee: 90, cities: ['المنصورة', 'دكرنس', 'ميت غمر', 'السنبلاوين', 'أجا', 'طلخا', 'شربين'] },
+      { name: 'الشرقية', fee: 90, cities: ['الزقازيق', 'العاشر من رمضان', 'بلبيس', 'منيا القمح', 'ههيا', 'أبو حماد'] },
+      { name: 'المنوفية', fee: 90, cities: ['شبين الكوم', 'مينوف', 'أشمون', 'السادات', 'قويسنا', 'بركة السبع'] },
+      { name: 'البحيرة', fee: 90, cities: ['دمنهور', 'كفر الدوار', 'رشيد', 'إيتاي البارود', 'أبو حمص', 'وادي النطرون'] },
+      { name: 'كفر الشيخ', fee: 90, cities: ['كفر الشيخ', 'دسوق', 'فوه', 'بلطيم', 'سيدي سالم', 'الحامول'] },
+      { name: 'دمياط', fee: 90, cities: ['دمياط', 'رأس البر', 'الزرقا', 'فارسكور', 'كفر سعد'] },
+      { name: 'الإسماعيلية', fee: 90, cities: ['الإسماعيلية', 'القنطرة', 'فايد', 'أبو صوير'] },
+      { name: 'الفيوم', fee: 90, cities: ['الفيوم', 'طامية', 'سنورس', 'إطسا', 'يوسف الصديق'] },
+      { name: 'بني سويف', fee: 90, cities: ['بني سويف', 'الفشن', 'ناصر', 'إهناسيا', 'ببا', 'سمسطا'] },
+      { name: 'المنيا', fee: 90, cities: ['المنيا', 'ملوي', 'سمالوط', 'مغاغة', 'أبو قرقاص'] },
+      { name: 'بورسعيد', fee: 90, cities: ['بورسعيد', 'بور فؤاد'] },
+      { name: 'السويس', fee: 90, cities: ['السويس', 'عتاقة', 'السخنة'] },
+      { name: 'سوهاج', fee: 90, cities: ['سوهاج', 'أخميم', 'جرجا', 'طما', 'طهطا', 'البلينا'] },
+      { name: 'أسيوط', fee: 90, cities: ['أسيوط', 'ديروط', 'منفلوط', 'القوصية', 'أبنوب', 'أبو تيج'] },
+      { name: 'قنا', fee: 90, cities: ['قنا', 'نجع حمادي', 'أبو تشت', 'قفط', 'دشنا'] },
+      { name: 'الأقصر', fee: 90, cities: ['الأقصر', 'إسنا', 'أرمنت', 'القرنة'] },
+      { name: 'أسوان', fee: 90, cities: ['أسوان', 'كوم أمبو', 'إدفو', 'نصر النوبة', 'دراو'] },
+      { name: 'البحر الأحمر', fee: 90, cities: ['الغردقة', 'سفاجا', 'القصير', 'مرسى علم', 'رأس غارب'] },
+      { name: 'شمال سيناء', fee: 90, cities: ['العريش', 'الشيخ زويد', 'رفح', 'بئر العبد'] },
+      { name: 'جنوب سيناء', fee: 90, cities: ['شرم الشيخ', 'دهب', 'طابا', 'نويبع','أبو رديس'] },
+      { name: 'مطروح', fee: 90, cities: ['مرسى مطروح', 'العلمين', 'سيوه', 'الضبعة'] },
+      { name: 'الوادي الجديد', fee: 90, cities: ['الخارجة', 'الداخلة', 'الفرافرة', 'باريس'] },
     ];
 
     const BADGE_STYLE = { 'NEW': `background:${A};color:#000`, 'LIMITED': 'background:#fff;color:#000', 'DROP 001': 'background:rgba(0,0,0,.85);color:#fff;border:1px solid #444' };
@@ -4529,6 +4529,7 @@
     function selectColor(colorId) {
       S.color = colorId;
       S.imgIdx = 0;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       render();
     }
 
@@ -4700,7 +4701,7 @@
 
       <div class="hero-scroll" style="z-index:7;position:absolute;">${tx('scrollHint')}</div>
     </div>
-    <div class="ticker"><div class="ticker-track"><span>AXS DROP 001 — PHANTOM ERA — LIMITED PIECES — USE CODE AXS10 FOR 10% OFF — CASH ON DELIVERY AVAILABLE — &nbsp;&nbsp;</span><span>AXS DROP 001 — PHANTOM ERA — LIMITED PIECES — USE CODE AXS10 FOR 10% OFF — CASH ON DELIVERY AVAILABLE — &nbsp;&nbsp;</span></div></div>
+    <div class="ticker"><div class="ticker-track"><span>AXS DROP 001 — PHANTOM ERA — LIMITED PIECES — USE CODE AXS5 FOR 5% OFF — CASH ON DELIVERY AVAILABLE — &nbsp;&nbsp;</span><span>AXS DROP 001 — PHANTOM ERA — LIMITED PIECES — USE CODE AXS5 FOR 5% OFF — CASH ON DELIVERY AVAILABLE — &nbsp;&nbsp;</span></div></div>
     <div class="section">
       <div class="section-header"><div><div class="section-tag">02 — ${tx('featured').toUpperCase()}</div><div class="section-title">${tx('theDrop').toUpperCase()}</div></div><button class="btn-outline" onclick="navigate('shop')">${tx('viewAll')}</button></div>
       <div class="grid-2">${featured.map(p => productCard(p)).join('')}</div>
@@ -4733,8 +4734,8 @@
       <div class="footer-logo">AXS</div>
       <div class="footer-copy">© 2025 AXS — ${tx('rights').toUpperCase()}</div>
       <div class="footer-links">
-        <a class="footer-link" href="https://www.instagram.com/axs.official" target="_blank" rel="noopener"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-linecap="round" stroke-width="2.5"/></svg>INSTAGRAM</a>
-        <a class="footer-link" href="https://www.tiktok.com/@axs.official" target="_blank" rel="noopener"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.27 8.27 0 0 0 4.84 1.55V6.79a4.85 4.85 0 0 1-1.07-.1z"/></svg>TIKTOK</a>
+        <a class="footer-link" href="https://www.instagram.com/axs.eg" target="_blank" rel="noopener"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-linecap="round" stroke-width="2.5"/></svg>INSTAGRAM</a>
+        <a class="footer-link" href="https://www.tiktok.com/@axs_eg" target="_blank" rel="noopener"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.27 8.27 0 0 0 4.84 1.55V6.79a4.85 4.85 0 0 1-1.07-.1z"/></svg>TIKTOK</a>
         <span class="footer-link" onclick="navigate('return')">RETURNS</span>
         <span class="footer-link" onclick="navigate('admin')" style="color:#222">⚙</span>
       </div>
@@ -4827,8 +4828,8 @@
       if (!p) return '<div class="empty"><div class="empty-text">PRODUCT NOT FOUND</div></div>';
       const wished = S.wish.includes(p.id);
       const reviews = REVIEWS[p.id] || [];
-      const related = PRODUCTS.filter(rp => p.related.includes(rp.id));
-      const rv = PRODUCTS.filter(rp => S.rv.includes(rp.id) && rp.id !== p.id).slice(0, 3);
+      const related = PRODUCTS.filter(rp => p.related.includes(rp.id) && !adminHiddenProducts.has(rp.id));
+      const rv = PRODUCTS.filter(rp => S.rv.includes(rp.id) && rp.id !== p.id && !adminHiddenProducts.has(rp.id)).slice(0, 3);
       const colors = getProductColors(p.id);
       const soldOut = isProductSoldOut(p.id);
 
@@ -4958,7 +4959,7 @@
         }
         return `<div class="cart-item">
           <div class="cart-thumb">${pv(getProduct(item.id) || item, 88, 0)}</div>
-          <div style="flex:1"><div class="cart-name">${item.name.toUpperCase()}</div><div class="cart-size">${tx('size')} ${item.size}</div></div>
+          <div style="flex:1"><div class="cart-name">${item.name.toUpperCase()}</div><div class="cart-size">${tx('size')} ${item.size}${item.colorName ? ` <span style="display:inline-flex;align-items:center;gap:4px;margin-left:6px">${item.colorHex ? `<span style="width:10px;height:10px;border-radius:50%;background:${item.colorHex};border:1px solid rgba(255,255,255,.2);display:inline-block"></span>` : ''}<span style="color:var(--text3)">${item.colorName}</span></span>` : ''}</div></div>
           <div class="cart-qty"><button onclick="updateQty(${idx},${item.qty - 1})">−</button><span>${item.qty}</span><button onclick="updateQty(${idx},${item.qty + 1})">+</button></div>
           <div class="cart-total">${item.price * item.qty}<span style="font-size:9px;color:var(--text3);font-family:var(--fm);margin-left:3px">EGP</span></div>
           <button class="cart-remove" onclick="removeFromCart(${idx})">✕</button>
@@ -4997,7 +4998,7 @@
     `: `
       <div style="font-family:var(--fd);font-size:48px;margin-bottom:24px">${tx('payment').toUpperCase()}</div>
       <div style="font-size:9px;letter-spacing:5px;color:var(--text3);font-family:var(--fm);margin-bottom:8px">00 — ${tx('promoCode')}</div>
-      <div class="promo-row"><input class="promo-input" placeholder="${S.lang === 'ar' ? 'مثال: AXS10' : 'e.g. AXS10'}" value="${S.promo}" oninput="S.promo=this.value"><button class="promo-btn" onclick="applyPromo()">${tx('apply')}</button></div>
+      <div class="promo-row"><input class="promo-input" placeholder="${S.lang === 'ar' ? 'كود الخصم' : 'Promo code'}" value="${S.promo}" oninput="S.promo=this.value"><button class="promo-btn" onclick="applyPromo()">${tx('apply')}</button></div>
       <div class="promo-msg" style="color:${S.discount > 0 ? '#4caf50' : A}">${S.discount > 0 ? (S.lang === 'ar' ? `تم تطبيق خصم ${S.discount * 100}% ✓` : `${S.discount * 100}% discount applied ✓`) : ''}</div>
       <div style="font-size:9px;letter-spacing:5px;color:var(--text3);font-family:var(--fm);margin:18px 0 10px">01 — ${tx('selectMethod').toUpperCase()}</div>
       ${pays.map(m => `<div class="pay-option${S.pay === m.id ? ' active' : ''}" onclick="selectPay('${m.id}')"><div class="pay-icon">${m.icon}</div><div style="flex:1"><div class="pay-label">${m.label}</div><div class="pay-sub">${m.sub}</div></div><div class="pay-radio${S.pay === m.id ? ' active' : ''}">${S.pay === m.id ? '✓' : ''}</div></div>`).join('')}
@@ -5007,7 +5008,7 @@
         <div class="summary-tag">${tx('orderSummary')}</div>
         ${S.cart.map(item => {
         if (item.isBundle) return `<div class="summary-row" style="font-weight:bold"><span style="color:${A}">▣ ${item.name.toUpperCase()}</span><span>${item.price} EGP</span></div>${item.bundleItems.map(bi => `<div class="summary-sub">· ${bi.name} (${bi.size})</div>`).join('')}`;
-        return `<div class="summary-row"><span>${item.name.toUpperCase()} ×${item.qty} (${item.size})</span><span>${item.price * item.qty} EGP</span></div>`;
+        return `<div class="summary-row"><span>${item.name.toUpperCase()} ×${item.qty} (${item.size}${item.colorName ? ` — ${item.colorName}` : ''})</span><span>${item.price * item.qty} EGP</span></div>`;
       }).join('')}
         ${S.discount > 0 ? `<div class="summary-row" style="color:#4caf50"><span>${tx('discount')} (${S.discount * 100}%)</span><span>−${rawTotal - discounted} EGP</span></div>` : ''}
         ${S.gov ? `<div class="summary-row"><span>شحن — ${S.gov.name}</span><span style="color:${A}">${S.shipping} EGP</span></div>` : ''}
@@ -5030,7 +5031,7 @@
     <div class="order-summary" style="margin-bottom:20px;text-align:left">
       ${od.items.map(item => {
         if (item.isBundle) return `<div class="summary-row" style="font-weight:bold"><span style="color:${A}">▣ ${item.name.toUpperCase()}</span><span>${item.price} EGP</span></div>${item.bundleItems.map(bi => `<div class="summary-sub">· ${bi.name} (${bi.size})</div>`).join('')}`;
-        return `<div class="summary-row"><span>${item.name.toUpperCase()} ×${item.qty} (${item.size})</span><span>${item.price * item.qty} EGP</span></div>`;
+        return `<div class="summary-row"><span>${item.name.toUpperCase()} ×${item.qty} (${item.size}${item.colorName ? ` — ${item.colorName}` : ''})</span><span>${item.price * item.qty} EGP</span></div>`;
       }).join('')}
       <div class="summary-divider"><span style="font-size:9px;letter-spacing:4px;color:var(--text3);font-family:var(--fm)">${tx('total')}</span><span style="font-family:var(--fd);font-size:24px">${od.total} EGP</span></div>
     </div>
@@ -5152,7 +5153,7 @@
       <div class="section-tag">01 — ${tx('ourStory').toUpperCase()}</div>
       <div class="section-title" style="margin-bottom:28px">${S.lang === 'ar' ? 'وُلدنا من الشوارع.' : 'BORN FROM THE STREETS.'}</div>
       <p style="font-size:15px;color:var(--text2);line-height:2;font-family:Georgia,serif;margin-bottom:40px">${S.lang === 'ar' ? "AXS ليست مجرد علامة تجارية — إنها شعور. نصنع لأولئك الذين يتحركون بصمت." : "AXS isn't just a clothing brand — it's a feeling. We build for those who move in silence. Started in 2023 from Cairo."}</p>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:56px">${[['2023', S.lang === 'ar' ? 'سنة التأسيس' : 'Founded'], ['014', S.lang === 'ar' ? 'الإصدار الحالي' : 'Current Drop'], ['6+', S.lang === 'ar' ? 'منتجات حصرية' : 'Exclusive Pieces']].map(([num, label]) => `<div style="background:var(--bg3);border:1px solid var(--border);padding:28px 20px;text-align:center"><div style="font-family:var(--fd);font-size:48px;color:${A};line-height:1;margin-bottom:4px">${num}</div><div style="font-size:10px;color:var(--text3);font-family:var(--fm);letter-spacing:3px">${label.toUpperCase()}</div></div>`).join('')}</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:56px">${[['2026', S.lang === 'ar' ? 'سنة التأسيس' : 'Founded'], ['001', S.lang === 'ar' ? 'الإصدار الحالي' : 'Current Drop'], ['4+', S.lang === 'ar' ? 'منتجات حصرية' : 'Exclusive Pieces']].map(([num, label]) => `<div style="background:var(--bg3);border:1px solid var(--border);padding:28px 20px;text-align:center"><div style="font-family:var(--fd);font-size:48px;color:${A};line-height:1;margin-bottom:4px">${num}</div><div style="font-size:10px;color:var(--text3);font-family:var(--fm);letter-spacing:3px">${label.toUpperCase()}</div></div>`).join('')}</div>
       <div class="section-tag">02 — ${tx('manifesto').toUpperCase()}</div>
       <div class="manifesto-block"><p style="font-size:18px;color:var(--text);line-height:1.8;font-family:Georgia,serif;font-style:italic">"${S.lang === 'ar' ? 'الصمت مخيط بالقطن. الشوارع مصنوعة للذين يجرؤون.' : 'Silence stitched in cotton. Streets made for those who dare.'}"</p></div>
       <div class="values-grid">${(S.lang === 'ar' ? [['الجودة أولاً', 'نستخدم أجود المواد فقط.'], ['محدود بقصد', 'كل قطعة محدودة.'], ['مصنوع في مصر', 'فخورون بجذورنا.'], ['للشوارع', 'مصمم لكل من يعيش الشارع.']] : [['Quality First', 'We use only the finest materials.'], ['Limited by Design', 'Every piece is limited.'], ['Made in Egypt', 'Proud of our roots.'], ['For the Streets', 'Designed for everyone who lives the street.']]).map(([title, desc]) => `<div class="value-card"><div style="font-family:var(--fd);font-size:18px;letter-spacing:2px;margin-bottom:8px">${title.toUpperCase()}</div><p style="font-size:12px;color:var(--text2);font-family:Georgia,serif;line-height:1.7">${desc}</p></div>`).join('')}</div>
@@ -5333,19 +5334,18 @@
     function render() {
       const main = document.getElementById('main');
       const pages = { home: renderHome, shop: renderShop, bundles: renderBundles, bundle: renderBundle, product: renderProduct, cart: renderCart, checkout: renderCheckout, confirmation: renderConfirmation, wishlist: renderWishlist, track: renderTrack, about: renderAbout, return: renderReturn };
+      // Save scroll position before re-render so in-page actions don't jump
+      const savedScroll = window.scrollY;
       try {
         main.innerHTML = (pages[S.page] || renderHome)();
-      // ── Replay fade-in animation on every page change
-      main.style.animation = 'none';
-      main.offsetHeight; // reflow
-      main.style.animation = '';
       } catch (e) {
         console.error('Render error:', e);
-        main.innerHTML = `<div style="padding:80px 24px;text-align:center;color:var(--text)"><div style="font-family:var(--fd);font-size:48px;margin-bottom:16px">AXS</div><div style="font-size:12px;color:#555;font-family:var(--fm);margin-bottom:24px">${e.message}</div><button onclick="S.page='home';render()" style="background:${A};color:#fff;border:none;padding:14px 32px;font-family:var(--fd);font-size:16px;letter-spacing:4px;cursor:pointer">← HOME</button></div>`;
+        main.innerHTML = `<div style="padding:80px 24px;text-align:center;color:var(--text)"><div style="font-family:var(--fd);font-size:48px;margin-bottom:16px">AXS</div><div style="font-size:12px;color:#555;font-family:var(--fm);margin-bottom:24px">${e.message}</div><button onclick="S.page='home';render()" style="background:${A};color:#fff;border:none;padding:14px 32px;font-family:var(--fd);font-size:16px;letter-spacing:4px;cursor:pointer">HOME</button></div>`;
       }
       updateNav();
       if (S.page === 'product' && getProduct(S.prodId)?.badge === 'LIMITED') startCountdown();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Restore scroll — navigation functions handle scrolling to top themselves
+      window.scrollTo({ top: savedScroll, behavior: 'instant' });
     }
 
     function updateNav() {
@@ -5397,14 +5397,34 @@
     // ═══════════════════════════════════════════════════════════════════════════════
     // NAVIGATION
     // ═══════════════════════════════════════════════════════════════════════════════
-    function navigate(page) {
-      // Always close mobile drawer when navigating
+    function _pushHistory(state) {
+      window.history.pushState(state, '');
+    }
+
+    window.addEventListener('popstate', function(e) {
+      const state = e.state;
+      if (!state || !state.page) {
+        // مفيش state — ارجع للهوم
+        _goToPage('home', null, null, false);
+        return;
+      }
+      if (state.page === 'product' && state.prodId) {
+        _goToPage('product', state.prodId, null, false);
+      } else if (state.page === 'bundle' && state.bundleId) {
+        _goToPage('bundle', null, state.bundleId, false);
+      } else {
+        _goToPage(state.page, null, null, false);
+      }
+    });
+
+    function _goToPage(page, prodId, bundleId, pushState) {
       const drawer = document.getElementById('mobile-drawer');
       if (drawer && drawer.classList.contains('open')) {
         drawer.classList.remove('open');
         document.body.style.overflow = '';
       }
       if (page === 'admin') {
+        if (pushState) _pushHistory({ page: 'admin' });
         document.getElementById('ann-bar').style.display = 'none';
         document.getElementById('navbar').style.display = 'none';
         document.getElementById('social-hub').style.display = 'none';
@@ -5415,27 +5435,34 @@
       document.getElementById('ann-bar').style.display = '';
       document.getElementById('navbar').style.display = '';
       document.getElementById('social-hub').style.display = '';
-      // Stop order polling when leaving admin
       stopOrderPolling();
       S.page = page;
+      if (prodId) S.prodId = prodId;
+      if (bundleId) S.bundleId = bundleId;
       if (page !== 'product') { S.size = null; S.qty = 1; S.imgIdx = 0; S.accordion = null; }
       if (page !== 'bundle') { S.bundleId = null; }
       if (page === 'checkout') { S.step = 1; S.pay = null; S.discount = 0; S.promo = ''; S.transfer = ''; S.file = null; S.fileName = null; }
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      if (pushState) _pushHistory({ page, prodId: prodId || null, bundleId: bundleId || null });
       render();
+    }
+
+    function navigate(page) {
+      _goToPage(page, null, null, true);
     }
 
     async function openProduct(id) {
       S.prodId = id; S.page = 'product'; S.size = null; S.qty = 1; S.imgIdx = 0; S.accordion = null; S.color = null;
       S.rv = [id, ...S.rv.filter(x => x !== id)].slice(0, 6);
-      render(); // render first with existing data
-      // load fresh data from Supabase
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      _pushHistory({ page: 'product', prodId: id });
+      render();
       await loadProductData(id);
-      // set default color
       const colors = getProductColors(id);
       if (colors.length > 0) S.color = colors[0].id;
-      render(); // re-render with colors and stock
+      render();
     }
-    function openBundle(id) { S.bundleId = id; S.page = 'bundle'; render(); }
+    function openBundle(id) { S.bundleId = id; S.page = 'bundle'; window.scrollTo({ top: 0, behavior: 'instant' }); _pushHistory({ page: 'bundle', bundleId: id }); render(); }
     function selectSize(size) { S.size = size; render(); }
     function setQty(n) { S.qty = Math.max(1, n); render(); }
     function selectImg(i) { S.imgIdx = i; render(); }
@@ -5503,7 +5530,7 @@
     function removeFromCart(idx) { S.cart.splice(idx, 1); saveCart(); render(); }
     function updateQty(idx, qty) { if (S.cart[idx] && S.cart[idx].isBundle) return; if (qty <= 0) S.cart.splice(idx, 1); else S.cart[idx].qty = qty; saveCart(); render(); }
     function clearCart() { if (!S.cart.length) return; S.cart = []; saveCart(); addToast(tx('cartCleared'), 'info'); render(); }
-    function toggleWish(id) { const has = S.wish.includes(id); S.wish = has ? S.wish.filter(x => x !== id) : [...S.wish, id]; addToast(has ? (S.lang === 'ar' ? 'أُزيل من المفضلة' : 'Removed from wishlist') : (S.lang === 'ar' ? 'حُفظ في المفضلة ♥' : 'Saved to wishlist ♥'), has ? 'info' : 'success'); render(); }
+    function toggleWish(id) { const has = S.wish.includes(id); S.wish = has ? S.wish.filter(x => x !== id) : [...S.wish, id]; saveWish(); addToast(has ? (S.lang === 'ar' ? 'أُزيل من المفضلة' : 'Removed from wishlist') : (S.lang === 'ar' ? 'حُفظ في المفضلة ♥' : 'Saved to wishlist ♥'), has ? 'info' : 'success'); render(); }
     function applyPromo() { const d = PROMOS[S.promo.toUpperCase()]; if (d) { S.discount = d; addToast(S.lang === 'ar' ? `تم تطبيق خصم ${d * 100}% ✓` : `${d * 100}% discount applied ✓`, 'success'); } else { S.discount = 0; addToast(S.lang === 'ar' ? 'كود الخصم غير صحيح' : 'Invalid promo code', 'error'); } render(); }
 
     function nextStep() {
@@ -5666,14 +5693,16 @@ ${itemsStr}
     }
 
     function toggleSearch() { const el = document.getElementById('search-overlay'); el.classList.toggle('open'); if (el.classList.contains('open')) document.getElementById('search-input').focus(); }
-    function toggleTheme() { S.dark = !S.dark; if (S.dark) document.body.removeAttribute('data-light'); else document.body.setAttribute('data-light', ''); updateNav(); }
-    function toggleLang() { S.lang = S.lang === 'en' ? 'ar' : 'en'; document.documentElement.setAttribute('lang', S.lang); document.documentElement.setAttribute('dir', S.lang === 'ar' ? 'rtl' : 'ltr'); render(); }
+    function toggleTheme() { S.dark = !S.dark; if (S.dark) document.body.removeAttribute('data-light'); else document.body.setAttribute('data-light', ''); try { localStorage.setItem('axs_dark', S.dark ? '1' : '0'); } catch(e){} updateNav(); }
+    function toggleLang() { S.lang = S.lang === 'en' ? 'ar' : 'en'; document.documentElement.setAttribute('lang', S.lang); document.documentElement.setAttribute('dir', S.lang === 'ar' ? 'rtl' : 'ltr'); try { localStorage.setItem('axs_lang', S.lang); } catch(e){} render(); }
 
     // ═══════════════════════════════════════════════════════════════════════════════
     // STORAGE & WHATSAPP
     // ═══════════════════════════════════════════════════════════════════════════════
     function saveCart() { try { localStorage.setItem('axs_cart', JSON.stringify(S.cart)); } catch (e) { } }
     function loadCart() { try { const c = localStorage.getItem('axs_cart'); if (c) S.cart = JSON.parse(c); } catch (e) { } }
+    function saveWish() { try { localStorage.setItem('axs_wish', JSON.stringify(S.wish)); } catch (e) { } }
+    function loadWish() { try { const w = localStorage.getItem('axs_wish'); if (w) S.wish = JSON.parse(w); } catch (e) { } }
 
     function sendWhatsApp(od) {
       const itemsStr = od.items.map(item => {
@@ -5875,6 +5904,28 @@ ${itemsStr}
     // ═══════════════════════════════════════════════════════════════════════════════
     async function initApp() {
       loadCart();
+      loadWish();
+
+      // Initial history entry so back button stays inside the site
+      if (!window.history.state) {
+        window.history.replaceState({ page: 'home' }, '');
+      }
+
+      // Restore theme & lang from localStorage
+      try {
+        const savedDark = localStorage.getItem('axs_dark');
+        const savedLang = localStorage.getItem('axs_lang');
+        if (savedDark !== null) {
+          S.dark = savedDark === '1';
+          if (!S.dark) document.body.setAttribute('data-light', '');
+          else document.body.removeAttribute('data-light');
+        }
+        if (savedLang) {
+          S.lang = savedLang;
+          document.documentElement.setAttribute('lang', S.lang);
+          document.documentElement.setAttribute('dir', S.lang === 'ar' ? 'rtl' : 'ltr');
+        }
+      } catch(e) {}
 
       // 1. Load settings (limited_end, hidden_products, hidden_bundles) from Supabase
       try {
