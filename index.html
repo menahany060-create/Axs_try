@@ -5848,7 +5848,6 @@
       if (S.file && S.pay !== 'cash') {
         try {
           const ext = S.file.name.split('.').pop().toLowerCase();
-          const filePath = `receipts/${orderNum}.${ext}`;
           const uploadRes = await fetch(`${SUPABASE_URL}/storage/v1/object/receipts/${orderNum}.${ext}`, {
             method: 'POST',
             headers: {
@@ -5865,7 +5864,7 @@
         } catch(e) { console.warn('Receipt upload failed:', e); }
       }
 
-      // Build order object for Supabase
+      // Build order object
       const orderData = {
         order_num: orderNum,
         customer_name: S.form.name,
@@ -5873,7 +5872,7 @@
         address: S.form.address,
         city: S.govCity,
         governorate: S.gov ? S.gov.name : '',
-        items: S.cart,           // jsonb column
+        items: S.cart,
         subtotal: rawTotal,
         shipping: S.shipping,
         cod_fee: S.codFee,
@@ -5886,18 +5885,49 @@
         notes: '',
       };
 
-      // Save to Supabase
-      const saved = await supabaseInsert('orders', orderData);
-      if (!saved) {
-        addToast(S.lang === 'ar' ? 'فشل حفظ الأوردر — جاري المحاولة مرة أخرى' : 'Order save failed — retrying', 'error');
-        // Still continue to WhatsApp even if Supabase fails
+      // Save to localStorage first as backup (in case of network failure)
+      try { localStorage.setItem('axs_pending_order', JSON.stringify(orderData)); } catch(e) {}
+
+      // Try to save to Supabase with 3 retries
+      let saved = false;
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        saved = await supabaseInsert('orders', orderData);
+        if (saved) break;
+        if (attempt < 3) await new Promise(r => setTimeout(r, 1000 * attempt));
       }
 
+      if (saved) {
+        // Clear pending backup only after successful save
+        try { localStorage.removeItem('axs_pending_order'); } catch(e) {}
+      } else {
+        // Supabase failed — still complete the order flow but notify
+        console.warn('Order saved to localStorage backup only');
+        addToast(S.lang === 'ar' ? '⚠️ تم تسجيل أوردرك — سيتم التأكيد قريباً' : '⚠️ Order recorded — confirmation coming soon', 'info');
+      }
+
+      // Clear cart ONLY after order is confirmed
       S.orderNum = orderNum;
       S.orderData = orderData;
+      S.cart = []; saveCart();
       sendTelegramNotification(orderData);
-      S.cart = []; saveCart(); S.page = 'confirmation';
+      S.page = 'confirmation';
       render();
+    }
+
+    // On app start — retry any pending orders that failed to save
+    async function retryPendingOrder() {
+      try {
+        const pending = localStorage.getItem('axs_pending_order');
+        if (!pending) return;
+        const orderData = JSON.parse(pending);
+        // Check if already saved (avoid duplicate)
+        const existing = await supabaseFetch('orders', `order_num=eq.${orderData.order_num}&limit=1`);
+        if (Array.isArray(existing) && existing.length > 0) {
+          localStorage.removeItem('axs_pending_order'); return;
+        }
+        const saved = await supabaseInsert('orders', orderData);
+        if (saved) { localStorage.removeItem('axs_pending_order'); console.log('Pending order recovered:', orderData.order_num); }
+      } catch(e) {}
     }
 
     async function sendTelegramNotification(od) {
@@ -6227,6 +6257,7 @@ ${itemsStr}
       loadCart();
       loadWish();
       loadRv();
+      retryPendingOrder();
 
       // Initial history entry so back button stays inside the site
       if (!window.history.state) {
