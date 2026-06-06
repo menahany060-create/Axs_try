@@ -2624,6 +2624,50 @@
       }
     }
 
+    /* ── STICKY MOBILE ATC BAR ── */
+    #sticky-atc-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 90;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 10px 16px;
+      gap: 8px;
+      align-items: center;
+    }
+    #sticky-atc-bar .sticky-name {
+      flex: 1;
+      font-family: var(--fd);
+      font-size: 13px;
+      letter-spacing: 2px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+    #sticky-atc-bar .sticky-price {
+      font-family: var(--fd);
+      font-size: 18px;
+      color: var(--text);
+      flex-shrink: 0;
+    }
+    #sticky-atc-bar .sticky-buy {
+      background: var(--A);
+      color: #000;
+      border: none;
+      padding: 12px 20px;
+      font-size: 11px;
+      letter-spacing: 4px;
+      font-family: var(--fd);
+      cursor: pointer;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
     @media(max-width:768px) {
 
       .prod-grid,
@@ -2658,6 +2702,11 @@
 
       .bundle-detail-imgs {
         grid-template-columns: 1fr 1fr;
+      }
+
+      /* ── STICKY MOBILE BAR ── */
+      #sticky-atc-bar {
+        display: flex !important;
       }
 
       .admin-stats {
@@ -3046,6 +3095,163 @@
         height: 65vh;
       }
     }
+
+    /* ══════════════════════════════════════════
+       AXS CINEMATIC ANIMATIONS — ADDED LAYER
+    ══════════════════════════════════════════ */
+
+    /* PAGE FADE OUT — applied before navigate */
+    @keyframes pageFadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to   { opacity: 0; transform: translateY(-6px); }
+    }
+    #main.page-exit {
+      animation: pageFadeOut 0.18s ease forwards;
+      pointer-events: none;
+    }
+
+    /* SCROLL REVEAL — elements animate in when entering viewport */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .reveal-delay-3 { transition-delay: 0.24s; }
+    .reveal-delay-4 { transition-delay: 0.32s; }
+
+    /* HERO STAGED ENTRANCE */
+    .hero-stage-0 { animation: fadeUp 0.5s ease 0.05s both; }
+    .hero-stage-1 { animation: fadeUp 0.6s ease 0.2s  both; }
+    .hero-stage-2 { animation: fadeUp 0.6s ease 0.38s both; }
+    .hero-stage-3 { animation: fadeUp 0.6s ease 0.55s both; }
+    .hero-stage-4 { animation: fadeUp 0.6s ease 0.72s both; }
+
+    /* PRODUCT CARD HOVER — cinematic lift */
+    .pcard {
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                  border-color 0.25s ease,
+                  background 0.25s ease,
+                  box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .pcard:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 59, 0, 0.12);
+    }
+    .pcard:hover .pcard-img img,
+    .pcard:hover .pcard-img > div > div:first-child {
+      transform: scale(1.04);
+    }
+    .pcard-img img,
+    .pcard-img > div {
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .pcard-img {
+      overflow: hidden;
+    }
+
+    /* TICKER — fade edges */
+    .ticker {
+      position: relative;
+    }
+    .ticker::before,
+    .ticker::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 60px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .ticker::before {
+      left: 0;
+      background: linear-gradient(to right, var(--A), transparent);
+    }
+    .ticker::after {
+      right: 0;
+      background: linear-gradient(to left, var(--A), transparent);
+    }
+
+    /* NAVBAR SCROLL EFFECT */
+    #navbar.scrolled {
+      height: 50px;
+      border-bottom-color: rgba(255, 59, 0, 0.18);
+      box-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
+    }
+    #navbar {
+      transition: height 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s;
+    }
+
+    /* BUTTON RIPPLE */
+    .btn, .btn-full {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(0);
+      animation: rippleAnim 0.5s linear;
+      pointer-events: none;
+    }
+    @keyframes rippleAnim {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* IMAGE SHIMMER SKELETON */
+    .img-shimmer {
+      background: linear-gradient(
+        90deg,
+        var(--bg3) 0%,
+        var(--border) 40%,
+        var(--bg3) 80%
+      );
+      background-size: 200% 100%;
+      animation: shimmerAnim 1.4s ease infinite;
+    }
+    @keyframes shimmerAnim {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    /* Applied automatically to img wrappers before load */
+    .pcard-img > div,
+    .prod-main > div:first-child,
+    .bundle-page-imgs > div {
+      position: relative;
+    }
+    .pcard-img > div::before,
+    .prod-main > div:first-child::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: linear-gradient(
+        90deg,
+        var(--bg3) 0%,
+        var(--border) 40%,
+        var(--bg3) 80%
+      );
+      background-size: 200% 100%;
+      animation: shimmerAnim 1.4s ease infinite;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .pcard-img > div.loaded::before,
+    .prod-main > div:first-child.loaded::before {
+      opacity: 0;
+    }
+
   </style>
 </head>
 
@@ -4186,8 +4392,10 @@
     <div style="display:flex;gap:8px">
       <button class="admin-btn" onclick="saveOrderNotes('${o.id}')">حفظ الملاحظات</button>
       <a href="https://wa.me/${o.phone || ''}" target="_blank" class="admin-btn" style="background:#25D366;text-decoration:none;display:inline-flex;align-items:center;gap:6px">📱 واتساب</a>
+      ${o.receipt_url ? `<a href="${o.receipt_url}" target="_blank" class="admin-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">🖼 إيصال الدفع</a>` : ''}
       <button class="admin-btn-danger" style="margin-left:auto" onclick="deleteOrder('${o.id}');closeOrderDetail()">حذف الأوردر</button>
-    </div>`;
+    </div>
+    ${o.receipt_url ? `<div style="margin-top:16px"><div style="font-size:9px;color:#555;letter-spacing:3px;margin-bottom:8px">إيصال الدفع</div><a href="${o.receipt_url}" target="_blank"><img src="${o.receipt_url}" style="max-width:100%;max-height:300px;object-fit:contain;border:1px solid #1a1a1a;display:block" onerror="this.style.display='none'"></a></div>` : `${o.payment_method !== 'cash' ? `<div style="margin-top:12px;padding:10px 14px;border:1px solid #2a1a1a;background:#110808"><span style="font-size:9px;color:#f44336;letter-spacing:2px;font-family:'DM Mono',monospace">⚠ لم يرفع العميل إيصال دفع</span></div>` : ''}`}`;
       document.getElementById('order-detail-modal').classList.add('open');
     }
 
@@ -4312,12 +4520,12 @@
     ];
 
     const PRODUCTS = [
-      { id: 1, name: 'AXS phantom tee', nameAr: 'فانتوم تيشيرت', category: 'T-SHIRTS', price: 500, oldPrice: 690, badge: 'DROP 001', rating: 4.7, reviewCount: 31, sizes: ['M', 'L', 'XL', 'XXL'], stock: { M: 8, L: 5, XL: 2, XXL: 1 }, desc: '100% heavy cotton - oversized fit - screen print.', descAr: 'قطن ثقيل 100%. قياس oversized. طباعة سكرين.', details: ['100% heavy cotton', 'Oversized fit', 'Screen print', 'Dropped shoulder', 'Garment washed'], detailsAr: ['قطن ثقيل 100%', 'قياس oversized', 'طباعة سكرين', 'كتف منخفض', 'مغسول'], bgFrom: '#040410', bgTo: '#000003', wm: '#07071a', related: [4, 6, 2] },
-      { id: 2, name: 'Voidwash Denim', nameAr: 'جينز Voidwash', category: 'T-SHIRTS', price: 820, oldPrice: 1000, badge: 'NEW', rating: 4.5, reviewCount: 18, sizes: ['M', 'L', 'XL'], stock: { M: 4, L: 7, XL: 3 }, desc: 'Baggy silhouette acid-washed to near-black. Raw hem. Wide leg.', descAr: 'سيلويت baggy مغسول حمضياً. حاشية خام. رجل واسعة.', details: ['100% cotton denim', 'Acid-wash finish', 'Wide-leg silhouette', 'Raw hem', 'Front+back pockets'], detailsAr: ['100% قطن دنيم', 'تشطيب acid-wash', 'سيلويت wide-leg', 'حاشية خام', 'جيوب أمامية وخلفية'], bgFrom: '#060810', bgTo: '#020306', wm: '#0a0c1c', related: [5, 1, 3] },
-      { id: 3, name: 'AXS Logo Cap', nameAr: 'كاب AXS', category: 'ACCESSORIES', price: 200, oldPrice: 300, badge: null, rating: 4.2, reviewCount: 44, sizes: ['ONE SIZE'], stock: { 'ONE SIZE': 15 }, desc: '6-panel structured cap. Tonal embroidered AXS logo. Adjustable strap.', descAr: 'كاب 6 ألواح مُهيكل. شعار AXS مطرز.', details: ['100% cotton twill', 'Structured 6-panel', 'Tonal embroidered logo', 'Adjustable snapback', 'One size fits most'], detailsAr: ['100% قطن تويل', '6 ألواح مُهيكلة', 'شعار مطرز', 'snapback قابل للتعديل', 'مقاس موحد'], bgFrom: '#0a0a0a', bgTo: '#030303', wm: '#141414', related: [1, 4, 6] },
-      { id: 4, name: 'Cropped Zip Hood', nameAr: 'هودي كروبد', category: 'T-SHIRTS', price: 870, oldPrice: null, badge: 'LIMITED', rating: 4.8, reviewCount: 24, sizes: ['M', 'L', 'XL', 'XXL'], stock: { M: 2, L: 1, XL: 3, XXL: 1 }, desc: 'Cropped fit. Full zip. White contrast stitching on black. Limited run.', descAr: 'قياس كروبد. زيب كامل. خياطة بيضاء تباينية.', details: ['360gsm cotton', 'Cropped silhouette', 'YKK full zip', 'White contrast stitching', 'Fitted ribbed hem'], detailsAr: ['قطن 360gsm', 'سيلويت كروبد', 'زيب YKK كامل', 'خياطة بيضاء تباينية', 'حاشية مضلعة'], bgFrom: '#101010', bgTo: '#040404', wm: '#1a1a1a', related: [1, 2, 6] },
-      { id: 5, name: 'wide leg pants', nameAr: 'وايد ليج سويت بانتس ', category: 'PANTS', price: 400, oldPrice: 550, badge: 'NEW', rating: 4.6, reviewCount: 12, sizes: ['M', 'L', 'XL', 'XXL'], stock: { M: 9, L: 4, XL: 5, XXL: 3 }, desc: '100% Egyption cotton. oversized fit. Heavy cotton.', descAr: '100% قطن مصري. مقاس كبير. قطن ثقيل.', details: ['Heavy cotton twill', 'Relaxed tapered fit', '6 pockets total', 'Adjustable ankle cord', 'YKK zippers'], detailsAr: ['تويل قطن ثقيل', 'قياس tapered مريح', '6 جيوب', 'حبل كاحل قابل للتعديل', 'سحابات YKK'], bgFrom: '#080a05', bgTo: '#030402', wm: '#0f1208', related: [2, 1, 6] },
-      { id: 6, name: 'Oversized Tee', nameAr: 'تيشيرت أوفرسايز', category: 'T-SHIRTS', price: 450, oldPrice: 550, badge: null, rating: 4.7, reviewCount: 67, sizes: ['M', 'L', 'XL', 'XXL'], stock: { M: 20, L: 15, XL: 8, XXL: 4 }, desc: '240gsm cotton. Boxy cut. Garment-dyed black. Back graphic print.', descAr: 'قطن 240gsm. قطع boxy. مصبوغ أسود.', details: ['240gsm cotton', 'Boxy oversized cut', 'Garment-dyed', 'Back graphic print', 'Dropped shoulder'], detailsAr: ['قطن 240gsm', 'قطع boxy oversized', 'مصبوغ بعد التصنيع', 'طباعة خلفية', 'كتف منخفض'], bgFrom: '#080808', bgTo: '#020202', wm: '#111', related: [1, 3, 4] },
+      { id: 1, name: 'AXS phantom tee', nameAr: 'فانتوم تيشيرت', category: 'T-SHIRTS', price: 500, oldPrice: 690, badge: 'DROP 001', rating: 4.7, reviewCount: 31, sizes: ['M', 'L', 'XL', 'XXL'], stock: { M: 8, L: 5, XL: 2, XXL: 1 }, desc: '100% heavy cotton - oversized fit - screen print.', descAr: 'قطن ثقيل 100%. قياس oversized. طباعة سكرين.', details: ['100% heavy cotton', 'Oversized fit', 'dtf print', 'Dropped shoulder'], detailsAr: ['قطن ثقيل 100%', 'قياس oversized', 'طباعة dtf', 'كتف منخفض'], bgFrom: '#040410', bgTo: '#000003', wm: '#07071a', related: [4, 6, 2] },
+      { id: 2, name: 'Voidwash Denim', nameAr: 'جينز Voidwash', category: 'T-SHIRTS', price: 820, oldPrice: 700, badge: 'NEW', rating: 4.5, reviewCount: 18, sizes: ['M', 'L', 'XL'], stock: { M: 4, L: 7, XL: 3 }, desc: 'Baggy silhouette acid-washed to near-black. Raw hem. Wide leg.', descAr: 'سيلويت baggy مغسول حمضياً. حاشية خام. رجل واسعة.',  details: ['100% heavy cotton', 'Oversized fit', 'dtf print', 'Dropped shoulder'], detailsAr: ['قطن ثقيل 100%', 'قياس oversized', 'طباعة dtf', 'كتف منخفض'], bgFrom: '#060810', bgTo: '#020306', wm: '#0a0c1c', related: [5, 1, 3] },
+      { id: 3, name: 'AXS Logo Cap', nameAr: 'كاب AXS', category: 'ACCESSORIES', price: 200, oldPrice: 300, badge: null, rating: 4.2, reviewCount: 44, sizes: ['ONE SIZE'], stock: { 'ONE SIZE': 15 }, desc: '6-panel structured cap. Tonal embroidered AXS logo. Adjustable strap.', descAr: 'كاب 6 ألواح مُهيكل. شعار AXS مطرز.', details: ['100% heavy cotton', 'Oversized fit', 'dtf print', 'Dropped shoulder'], detailsAr: ['قطن ثقيل 100%', 'قياس oversized', 'طباعة dtf', 'كتف منخفض'], bgFrom: '#0a0a0a', bgTo: '#030303', wm: '#141414', related: [1, 4, 6] },
+      { id: 4, name: 'Cropped Zip Hood', nameAr: 'هودي كروبد', category: 'T-SHIRTS', price: 870, oldPrice: null, badge: 'LIMITED', rating: 4.8, reviewCount: 24, sizes: ['M', 'L', 'XL', 'XXL'], stock: { M: 2, L: 1, XL: 3, XXL: 1 }, desc: 'Cropped fit. Full zip. White contrast stitching on black. Limited run.', descAr: 'قياس كروبد. زيب كامل. خياطة بيضاء تباينية.', details: ['100% heavy cotton', 'Oversized fit', 'dtf print', 'Dropped shoulder'], detailsAr: ['قطن ثقيل 100%', 'قياس oversized', 'طباعة dtf', 'كتف منخفض'], bgFrom: '#101010', bgTo: '#040404', wm: '#1a1a1a', related: [1, 2, 6] },
+      { id: 5, name: 'wide leg pants', nameAr: 'وايد ليج سويت بانتس ', category: 'T-SHIRTS', price: 400, oldPrice: 650, badge: 'NEW', rating: 4.6, reviewCount: 12, sizes: ['M', 'L', 'XL', 'XXL'], stock: { M: 9, L: 4, XL: 5, XXL: 3 }, desc: '100% Egyption cotton. oversized fit. Heavy cotton.', descAr: '100% قطن مصري. مقاس كبير. قطن ثقيل.',  details: ['100% heavy cotton', 'Oversized fit', 'dtf print', 'Dropped shoulder'], detailsAr: ['قطن ثقيل 100%', 'قياس oversized', 'طباعة dtf', 'كتف منخفض'], bgFrom: '#080a05', bgTo: '#030402', wm: '#0f1208', related: [2, 1, 6] },
+      { id: 6, name: 'Oversized Tee', nameAr: 'تيشيرت أوفرسايز', category: 'T-SHIRTS', price: 450, oldPrice: 550, badge: null, rating: 4.7, reviewCount: 67, sizes: ['M', 'L', 'XL', 'XXL'], stock: { M: 20, L: 15, XL: 8, XXL: 4 }, desc: '240gsm cotton. Boxy cut. Garment-dyed black. Back graphic print.', descAr: 'قطن 240gsm. قطع boxy. مصبوغ أسود.', details: ['100% heavy cotton', 'Oversized fit', 'dtf print', 'Dropped shoulder'], detailsAr: ['قطن ثقيل 100%', 'قياس oversized', 'طباعة dtf', 'كتف منخفض'], bgFrom: '#080808', bgTo: '#020202', wm: '#111', related: [1, 3, 4] },
     ];
 
     const BUNDLES_DEFAULT = [
@@ -4399,33 +4607,33 @@
 
     const PROMOS = { AXS5: 0.05, AXS20: 0.20, WELCOME: 0.15, FIRSTORDER: 0.12 };
     const GOVERNORATES = [
-      { name: 'القاهرة', fee: 90, cities: ['مدينة نصر', 'المعادي', 'مصر الجديدة', 'عين شمس', 'الزيتون', 'شبرا', 'التجمع الخامس', 'حلوان', 'المقطم', 'وسط البلد'] },
-      { name: 'الجيزة', fee: 90, cities: ['الدقي', 'المهندسين', '6 أكتوبر', 'الشيخ زايد', 'فيصل', 'بولاق الدكرور', 'إمبابة', 'الهرم', 'الوراق'] },
-      { name: 'القليوبية', fee: 90, cities: ['شبرا الخيمة', 'بنها', 'قليوب', 'كفر شكر', 'طوخ', 'القناطر الخيرية'] },
-      { name: 'الإسكندرية', fee: 90, cities: ['المنتزه', 'سيدي بشر', 'العجمي', 'برج العرب', 'الدخيلة', 'العامرية', 'المعمورة', 'كليوباترا'] },
-      { name: 'الغربية', fee: 90, cities: ['طنطا', 'المحلة الكبرى', 'كفر الزيات', 'زفتى', 'السنطة', 'بسيون'] },
-      { name: 'الدقهلية', fee: 90, cities: ['المنصورة', 'دكرنس', 'ميت غمر', 'السنبلاوين', 'أجا', 'طلخا', 'شربين'] },
-      { name: 'الشرقية', fee: 90, cities: ['الزقازيق', 'العاشر من رمضان', 'بلبيس', 'منيا القمح', 'ههيا', 'أبو حماد'] },
-      { name: 'المنوفية', fee: 90, cities: ['شبين الكوم', 'مينوف', 'أشمون', 'السادات', 'قويسنا', 'بركة السبع'] },
-      { name: 'البحيرة', fee: 90, cities: ['دمنهور', 'كفر الدوار', 'رشيد', 'إيتاي البارود', 'أبو حمص', 'وادي النطرون'] },
-      { name: 'كفر الشيخ', fee: 90, cities: ['كفر الشيخ', 'دسوق', 'فوه', 'بلطيم', 'سيدي سالم', 'الحامول'] },
-      { name: 'دمياط', fee: 90, cities: ['دمياط', 'رأس البر', 'الزرقا', 'فارسكور', 'كفر سعد'] },
-      { name: 'الإسماعيلية', fee: 90, cities: ['الإسماعيلية', 'القنطرة', 'فايد', 'أبو صوير'] },
-      { name: 'الفيوم', fee: 90, cities: ['الفيوم', 'طامية', 'سنورس', 'إطسا', 'يوسف الصديق'] },
-      { name: 'بني سويف', fee: 90, cities: ['بني سويف', 'الفشن', 'ناصر', 'إهناسيا', 'ببا', 'سمسطا'] },
-      { name: 'المنيا', fee: 90, cities: ['المنيا', 'ملوي', 'سمالوط', 'مغاغة', 'أبو قرقاص'] },
-      { name: 'بورسعيد', fee: 90, cities: ['بورسعيد', 'بور فؤاد'] },
-      { name: 'السويس', fee: 90, cities: ['السويس', 'عتاقة', 'السخنة'] },
-      { name: 'سوهاج', fee: 90, cities: ['سوهاج', 'أخميم', 'جرجا', 'طما', 'طهطا', 'البلينا'] },
-      { name: 'أسيوط', fee: 90, cities: ['أسيوط', 'ديروط', 'منفلوط', 'القوصية', 'أبنوب', 'أبو تيج'] },
-      { name: 'قنا', fee: 90, cities: ['قنا', 'نجع حمادي', 'أبو تشت', 'قفط', 'دشنا'] },
-      { name: 'الأقصر', fee: 90, cities: ['الأقصر', 'إسنا', 'أرمنت', 'القرنة'] },
-      { name: 'أسوان', fee: 90, cities: ['أسوان', 'كوم أمبو', 'إدفو', 'نصر النوبة', 'دراو'] },
-      { name: 'البحر الأحمر', fee: 90, cities: ['الغردقة', 'سفاجا', 'القصير', 'مرسى علم', 'رأس غارب'] },
-      { name: 'شمال سيناء', fee: 90, cities: ['العريش', 'الشيخ زويد', 'رفح', 'بئر العبد'] },
-      { name: 'جنوب سيناء', fee: 90, cities: ['شرم الشيخ', 'دهب', 'طابا', 'نويبع','أبو رديس'] },
-      { name: 'مطروح', fee: 90, cities: ['مرسى مطروح', 'العلمين', 'سيوه', 'الضبعة'] },
-      { name: 'الوادي الجديد', fee: 90, cities: ['الخارجة', 'الداخلة', 'الفرافرة', 'باريس'] },
+      { name: 'القاهرة', fee: 90, cities: ['وسط البلد', 'باب الشعرية', 'الأزبكية', 'الموسكي', 'الجمالية', 'الدرب الأحمر', 'السيدة زينب', 'مصر القديمة', 'الخليفة', 'عابدين', 'شبرا', 'روض الفرج', 'الزاوية الحمراء', 'العباسية', 'الزيتون', 'حدائق القبة', 'عين شمس', 'المطرية', 'مدينة نصر', 'النزهة', 'مصر الجديدة', 'البساتين', 'دار السلام', 'المعادي', 'طره', 'حلوان', 'المقطم', 'القاهرة الجديدة', 'التجمع الأول', 'التجمع الخامس', 'الشروق', 'المرج', 'عزبة النخل', 'مدينة بدر', 'منشية ناصر', 'السلام', 'الأميرية', 'المعصرة', 'قصر النيل'] },
+      { name: 'الجيزة', fee: 90, cities: ['الدقي', 'المهندسين', 'العجوزة', 'الجيزة', 'بولاق الدكرور', 'إمبابة', 'فيصل', 'الهرم', 'الوراق', 'أوسيم', 'كرداسة', 'أبو النمرس', 'البدرشين', 'الحوامدية', 'الصف', 'أطفيح', 'العياط', 'منشأة القناطر', '6 أكتوبر', 'الشيخ زايد', 'الحي الحادي عشر', 'المنيل', 'ترسا', 'سقارة'] },
+      { name: 'القليوبية', fee: 90, cities: ['بنها', 'شبرا الخيمة', 'قليوب', 'القناطر الخيرية', 'كفر شكر', 'طوخ', 'الخانكة', 'الخصوص', 'قها', 'منوف الكبرى', 'باسوس', 'تلا', 'العبور'] },
+      { name: 'الإسكندرية', fee: 90, cities: ['المنتزه', 'سيدي بشر', 'سيدي جابر', 'الإبراهيمية', 'الرمل', 'المنشية', 'كرموز', 'الجمرك', 'اللبان', 'العجمي', 'الهانوفيل', 'الدخيلة', 'العامرية', 'برج العرب', 'المعمورة', 'كليوباترا', 'فلمنج', 'ميامي', 'مندرة', 'الأنفوشي', 'باكوس', 'أبو قير', 'بياضة'] },
+      { name: 'الغربية', fee: 90, cities: ['طنطا', 'المحلة الكبرى', 'كفر الزيات', 'زفتى', 'السنطة', 'بسيون', 'سمنود', 'قطور', 'المحلة الكبرى'] },
+      { name: 'الدقهلية', fee: 90, cities: ['المنصورة', 'طلخا', 'دكرنس', 'ميت غمر', 'السنبلاوين', 'أجا', 'شربين', 'منية النصر', 'بلقاس', 'ميت سلسيل', 'الجمالية', 'جمصة', 'نبروه', 'بني عبيد', 'تمي الأمديد', 'المنزلة', 'المطرية', 'محلة دمنة', 'ميت أبو غالب'] },
+      { name: 'الشرقية', fee: 90, cities: ['الزقازيق', 'العاشر من رمضان', 'بلبيس', 'منيا القمح', 'ههيا', 'أبو حماد', 'فاقوس', 'الحسينية', 'كفر صقر', 'الإبراهيمية', 'ديرب نجم', 'أبو كبير', 'القنايات', 'الصالحية الجديدة', 'مشتول السوق', 'قرين', 'أولاد صقر', 'طوكي السودان'] },
+      { name: 'المنوفية', fee: 90, cities: ['شبين الكوم', 'مينوف', 'أشمون', 'السادات', 'قويسنا', 'بركة السبع', 'تلا', 'الشهداء', 'سرس الليان', 'بيلا', 'الباجور'] },
+      { name: 'البحيرة', fee: 90, cities: ['دمنهور', 'كفر الدوار', 'رشيد', 'إيتاي البارود', 'أبو حمص', 'وادي النطرون', 'شبراخيت', 'حوش عيسى', 'المحمودية', 'الدلنجات', 'بدر', 'الرحمانية', 'النوبارية', 'أبو المطامير', 'كوم حمادة', 'بني سلامة', 'أبيس'] },
+      { name: 'كفر الشيخ', fee: 90, cities: ['كفر الشيخ', 'دسوق', 'فوه', 'بلطيم', 'سيدي سالم', 'الحامول', 'مطوبس', 'قلين', 'الرياض', 'بيلا', 'برج البرلس', 'سيدي غازي'] },
+      { name: 'دمياط', fee: 90, cities: ['دمياط', 'رأس البر', 'الزرقا', 'فارسكور', 'كفر سعد', 'كفر البطيخ', 'الرومانية', 'دمياط الجديدة', 'عزبة البرج'] },
+      { name: 'الإسماعيلية', fee: 90, cities: ['الإسماعيلية', 'القنطرة شرق', 'القنطرة غرب', 'فايد', 'أبو صوير', 'التل الكبير', 'القصاصين'] },
+      { name: 'بورسعيد', fee: 90, cities: ['بورسعيد', 'بور فؤاد', 'الزهور', 'الشرق', 'الغرب', 'المناخ', 'العرب'] },
+      { name: 'السويس', fee: 90, cities: ['السويس', 'عتاقة', 'السخنة', 'الأربعين', 'فيصل', 'الجناين'] },
+      { name: 'الفيوم', fee: 90, cities: ['الفيوم', 'طامية', 'سنورس', 'إطسا', 'يوسف الصديق', 'إبشواي', 'الحادقة', 'أبشواي', 'قلمشاه', 'الجبل الأصفر'] },
+      { name: 'بني سويف', fee: 90, cities: ['بني سويف', 'الفشن', 'ناصر', 'إهناسيا', 'ببا', 'سمسطا', 'بياض العرب', 'الواسطى', 'نزلة عيسى', 'الشواشنة'] },
+      { name: 'المنيا', fee: 90, cities: ['المنيا', 'ملوي', 'سمالوط', 'مغاغة', 'أبو قرقاص', 'بني مزار', 'مطاي', 'العدوة', 'دير مواس', 'المنيا الجديدة'] },
+      { name: 'أسيوط', fee: 90, cities: ['أسيوط', 'ديروط', 'منفلوط', 'القوصية', 'أبنوب', 'أبو تيج', 'الغنايم', 'البداري', 'ساحل سليم', 'صدفا', 'الفتح'] },
+      { name: 'سوهاج', fee: 90, cities: ['سوهاج', 'أخميم', 'جرجا', 'طما', 'طهطا', 'البلينا', 'دار السلام', 'المراغة', 'المنشأة', 'جهينة', 'ساقلتة', 'العسيرات'] },
+      { name: 'قنا', fee: 90, cities: ['قنا', 'نجع حمادي', 'أبو تشت', 'قفط', 'دشنا', 'فرشوط', 'قوص', 'الوقف', 'نقادة'] },
+      { name: 'الأقصر', fee: 90, cities: ['الأقصر', 'إسنا', 'أرمنت', 'القرنة', 'البياضية', 'الزينية', 'الطود', 'إسنا', 'الهماميات'] },
+      { name: 'أسوان', fee: 90, cities: ['أسوان', 'كوم أمبو', 'إدفو', 'دراو', 'نصر النوبة', 'أبو سمبل', 'كلابشة', 'الضبعية', 'شالاتين'] },
+      { name: 'البحر الأحمر', fee: 90, cities: ['الغردقة', 'سفاجا', 'القصير', 'مرسى علم', 'رأس غارب', 'ضباء', 'الشلاتين', 'حلايب'] },
+      { name: 'شمال سيناء', fee: 90, cities: ['العريش', 'الشيخ زويد', 'رفح', 'بئر العبد', 'نخل', 'الحسنة', 'القسيمة'] },
+      { name: 'جنوب سيناء', fee: 90, cities: ['شرم الشيخ', 'دهب', 'طابا', 'نويبع', 'أبو رديس', 'أبو زنيمة', 'الطور', 'سانت كاترين', 'رأس سدر'] },
+      { name: 'مطروح', fee: 90, cities: ['مرسى مطروح', 'العلمين', 'سيوه', 'الضبعة', 'النجيلة', 'سيدي براني', 'السلوم', 'الحمام', 'الدابا'] },
+      { name: 'الوادي الجديد', fee: 90, cities: ['الخارجة', 'الداخلة', 'الفرافرة', 'باريس', 'بلاط', 'موط', 'أبو منقار'] },
     ];
 
     const BADGE_STYLE = { 'NEW': `background:${A};color:#000`, 'LIMITED': 'background:#fff;color:#000', 'DROP 001': 'background:rgba(0,0,0,.85);color:#fff;border:1px solid #444' };
@@ -4444,7 +4652,7 @@
       cart: [], wish: [], dark: true, lang: 'en', rv: [],
       step: 1, form: { name: '', phone: '', address: '' },
       gov: null, govCity: '', shipping: 0, codFee: 0,
-      pay: null, promo: '', discount: 0, transfer: '', file: null, fileName: null,
+      pay: null, promo: '', discount: 0, transfer: '', file: null, fileName: null, filePreviewUrl: null, promoOpen: false,
       orderNum: null, orderData: null,
       catFilter: 'ALL', sortFilter: 'FEATURED', shopSearch: '',
       trackInput: '', trackResult: null,
@@ -4629,6 +4837,10 @@
       <div class="pcard-row"><div class="pcard-name">${pName(p).toUpperCase()}</div><div class="pcard-price">${p.oldPrice ? `<div class="pcard-old">${p.oldPrice}</div>` : ''}<span class="pcard-new">${p.price}</span><span class="pcard-eqp">EGP</span></div></div>
       ${colorDots}
       <div class="pcard-footer"><div>${stars(p.rating, 11)} <span style="font-size:9px;color:var(--text3);font-family:var(--fm)">(${p.reviewCount})</span></div>${sl ? `<span class="stock-badge" style="color:${sl.c};background:${sl.c}22">${sl.label}</span>` : ''}</div>
+      ${soldOut ? '' : `<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
+        <button class="pcard-atc-btn" onclick="event.stopPropagation();quickAddToCart(${p.id})" style="background:transparent;border:1px solid var(--border);color:var(--text3);padding:9px 6px;font-size:9px;letter-spacing:3px;font-family:var(--fd);cursor:pointer;transition:all .2s;white-space:nowrap" onmouseenter="this.style.borderColor='var(--text)';this.style.color='var(--text)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--text3)'">${tx('addToCart')}</button>
+        <button onclick="event.stopPropagation();quickBuyNow(${p.id})" style="background:var(--A);border:1px solid var(--A);color:#000;padding:9px 6px;font-size:9px;letter-spacing:3px;font-family:var(--fd);cursor:pointer;transition:all .2s;white-space:nowrap" onmouseenter="this.style.opacity='0.85'" onmouseleave="this.style.opacity='1'">BUY NOW</button>
+      </div>`}
     </div>
   </div>`;
     }
@@ -4693,15 +4905,15 @@
 
       <!-- HERO TOP BAR: AXS title -->
       <div style="position:absolute;top:0;left:0;right:0;z-index:8;background:rgba(0,0,0,0.82);padding:18px 24px 14px;text-align:center;pointer-events:none;">
-        <div class="hero-tag" style="margin-bottom:6px">FW/25 — VOL.01 — DROP 001</div>
-        <div class="hero-title" style="mix-blend-mode:normal;margin-bottom:0">AXS</div>
+        <div class="hero-tag hero-stage-0" style="margin-bottom:6px">FW/25 — VOL.01 — DROP 001</div>
+        <div class="hero-title hero-stage-1" style="mix-blend-mode:normal;margin-bottom:0">AXS</div>
       </div>
 
       <!-- HERO BOTTOM BAR: CTA -->
       <div style="position:absolute;bottom:75px;left:0;right:0;z-index:8;background:rgba(0,0,0,0.82);padding:20px 24px 28px;text-align:center;">
-        <div class="hero-sub" style="margin-bottom:4px">${S.lang === 'ar' ? 'صمت مخيط بالقطن.' : 'Silence stitched in cotton.'}</div>
-        <div class="hero-sub2" style="margin-bottom:18px">${S.lang === 'ar' ? 'ستريتوير مصمم لما بعد منتصف الليل.' : 'Streetwear engineered for the after-hours.'}</div>
-        <button class="btn" onclick="navigate('shop')">${tx('shopTheDrop')}</button>
+        <div class="hero-sub hero-stage-2" style="margin-bottom:4px">${S.lang === 'ar' ? 'صمت مخيط بالقطن.' : 'Silence stitched in cotton.'}</div>
+        <div class="hero-sub2 hero-stage-3" style="margin-bottom:18px">${S.lang === 'ar' ? 'ستريتوير مصمم لما بعد منتصف الليل.' : 'Streetwear engineered for the after-hours.'}</div>
+        <button class="btn hero-stage-4" onclick="navigate('shop')">${tx('shopTheDrop')}</button>
       </div>
     </div>
     <div class="ticker"><div class="ticker-track"><span>AXS DROP 001 — PHANTOM ERA — LIMITED PIECES — USE CODE AXS5 FOR 5% OFF — CASH ON DELIVERY AVAILABLE — &nbsp;&nbsp;</span><span>AXS DROP 001 — PHANTOM ERA — LIMITED PIECES — USE CODE AXS5 FOR 5% OFF — CASH ON DELIVERY AVAILABLE — &nbsp;&nbsp;</span></div></div>
@@ -4915,8 +5127,9 @@
            <div class="size-btns">${p.sizes.map(s => { const st = sizeStockFn(s); return `<button class="size-btn${S.size === s ? ' active' : ''}${st === 0 ? ' sold' : ''}" onclick="${st > 0 ? `selectSize('${s}')` : ''}">${s}${st === 0 ? `<span style="font-size:7px;display:block;color:#555">OUT</span>` : ''}</button>`; }).join('')}</div>
            <div class="qty-add">
              <div class="qty-ctrl"><button onclick="setQty(${S.qty - 1})">−</button><span class="qty-val">${S.qty}</span><button onclick="setQty(${S.qty + 1})">+</button></div>
-             <button class="btn" style="flex:1;height:52px" onclick="doAddToCart()">${tx('addToCart')}</button>
-           </div>`
+             <button class="btn" style="flex:1;height:52px;min-width:0" onclick="doAddToCart()">${tx('addToCart')}</button>
+           </div>
+           <button class="btn btn-full" style="background:var(--A);color:#000;height:52px;margin-bottom:10px;border:none;letter-spacing:6px" onclick="doBuyNow()">BUY NOW →</button>`
         }
       <button class="wish-btn${wished ? ' active' : ''}" onclick="toggleWish(${p.id})">${wished ? tx('saved') : tx('saveWish')}</button>
       <div>${accs.map((a, i) => `<div class="acc-item"><button class="acc-btn" onclick="toggleAccordion(${i})">${a.t}<span class="acc-icon${S.accordion === i ? ' open' : ''}">+</span></button>${S.accordion === i ? `<div class="acc-body">${a.c}</div>` : ''}</div>`).join('')}</div>
@@ -4929,7 +5142,12 @@
     </div>
     <div style="margin-bottom:48px"><div class="section-tag">${tx('youMightLike').toUpperCase()}</div><div class="section-title" style="margin-bottom:24px">${tx('related').toUpperCase()}</div><div class="grid-3">${related.map(rp => productCard(rp)).join('')}</div></div>
     ${rv.length > 0 ? `<div><div class="section-tag">${tx('keepBrowsing').toUpperCase()}</div><div class="section-title" style="margin-bottom:24px">${tx('recentlyViewed').toUpperCase()}</div><div class="grid-3">${rv.map(rp => productCard(rp)).join('')}</div></div>` : ''}
-  </div>`;
+  </div>
+  ${!soldOut ? `<div id="sticky-atc-bar">
+    <span class="sticky-name">${pName(p).toUpperCase()}</span>
+    <span class="sticky-price">${p.price} <span style="font-size:11px;color:var(--text3);font-family:var(--fm)">EGP</span></span>
+    <button class="sticky-buy" onclick="doBuyNow()">${S.lang === 'ar' ? 'اشتري دلوقتي' : 'BUY NOW'}</button>
+  </div>` : ''}`;
     }
 
     function renderCart() {
@@ -5001,11 +5219,16 @@
     `: `
       <div style="font-family:var(--fd);font-size:48px;margin-bottom:24px">${tx('payment').toUpperCase()}</div>
       <div style="font-size:9px;letter-spacing:5px;color:var(--text3);font-family:var(--fm);margin-bottom:8px">00 — ${tx('promoCode')}</div>
-      <div class="promo-row"><input class="promo-input" placeholder="${S.lang === 'ar' ? 'كود الخصم' : 'Promo code'}" value="${S.promo}" oninput="S.promo=this.value"><button class="promo-btn" onclick="applyPromo()">${tx('apply')}</button></div>
-      <div class="promo-msg" style="color:${S.discount > 0 ? '#4caf50' : A}">${S.discount > 0 ? (S.lang === 'ar' ? `تم تطبيق خصم ${S.discount * 100}% ✓` : `${S.discount * 100}% discount applied ✓`) : ''}</div>
+      <div style="border:1px solid var(--border);margin-bottom:14px">
+        <button onclick="S.promoOpen=!S.promoOpen;render()" style="width:100%;background:none;border:none;color:${S.discount>0?'#4caf50':'var(--text3)'};display:flex;justify-content:space-between;align-items:center;padding:12px 14px;font-size:10px;letter-spacing:3px;font-family:var(--fm);cursor:pointer">
+          <span>${S.discount > 0 ? (S.lang==='ar' ? `✓ خصم ${S.discount*100}% مطبّق` : `✓ ${S.discount*100}% discount applied`) : (S.lang==='ar' ? 'عندك كود خصم؟' : 'Have a promo code?')}</span>
+          <span style="font-size:14px">${S.promoOpen ? '−' : '+'}</span>
+        </button>
+        ${S.promoOpen ? `<div style="padding:0 14px 14px"><div class="promo-row" style="margin-bottom:6px"><input class="promo-input" placeholder="${S.lang==='ar' ? 'كود الخصم' : 'Promo code'}" value="${S.promo}" oninput="S.promo=this.value"><button class="promo-btn" onclick="applyPromo()">${tx('apply')}</button></div></div>` : ''}
+      </div>
       <div style="font-size:9px;letter-spacing:5px;color:var(--text3);font-family:var(--fm);margin:18px 0 10px">01 — ${tx('selectMethod').toUpperCase()}</div>
       ${pays.map(m => `<div class="pay-option${S.pay === m.id ? ' active' : ''}" onclick="selectPay('${m.id}')"><div class="pay-icon">${m.icon}</div><div style="flex:1"><div class="pay-label">${m.label}</div><div class="pay-sub">${m.sub}</div></div><div class="pay-radio${S.pay === m.id ? ' active' : ''}">${S.pay === m.id ? '✓' : ''}</div></div>`).join('')}
-      ${S.pay && S.pay !== 'cash' ? `<div style="margin:16px 0"><div style="font-size:9px;letter-spacing:5px;color:var(--text3);font-family:var(--fm);margin-bottom:8px">02 — ${tx('transferTo').toUpperCase()}</div><div style="background:var(--bg3);border:1px solid var(--border);padding:12px 16px;font-size:13px;letter-spacing:2px;color:${A};font-family:var(--fm);margin-bottom:10px">${pays.find(pm => pm.id === S.pay)?.num || ''}</div><input class="field" style="margin-bottom:14px" value="${S.transfer}" oninput="S.transfer=this.value" placeholder="${S.lang === 'ar' ? 'رقم حسابك' : 'YOUR NUMBER'}"><div style="font-size:9px;letter-spacing:5px;color:var(--text3);font-family:var(--fm);margin-bottom:8px">03 — ${tx('uploadScreenshot').toUpperCase()}</div><label class="upload-zone${S.file ? ' has-file' : ''}"><input type="file" accept="image/*" style="display:none" onchange="setFile(this)" id="receipt-upload"><span style="font-size:20px;opacity:.35">↑</span><span id="upload-label" style="font-size:9px;letter-spacing:3px;color:${S.file ? A : 'var(--text3)'};font-family:var(--fm)">${S.fileName || tx('clickUpload')}</span><span style="font-size:8px;color:var(--text3);letter-spacing:2px;font-family:var(--fm)">JPG OR PNG · MAX 10MB</span></label></div>` : ''}
+      ${S.pay && S.pay !== 'cash' ? `<div style="margin:16px 0"><div style="font-size:9px;letter-spacing:5px;color:var(--text3);font-family:var(--fm);margin-bottom:8px">02 — ${tx('transferTo').toUpperCase()}</div><div style="background:var(--bg3);border:1px solid var(--border);padding:12px 16px;font-size:13px;letter-spacing:2px;color:${A};font-family:var(--fm);margin-bottom:10px">${pays.find(pm => pm.id === S.pay)?.num || ''}</div><input class="field" style="margin-bottom:14px" value="${S.transfer}" oninput="S.transfer=this.value" placeholder="${S.lang === 'ar' ? 'رقم حسابك' : 'YOUR NUMBER'}"><div style="font-size:9px;letter-spacing:5px;color:var(--text3);font-family:var(--fm);margin-bottom:8px">03 — ${tx('uploadScreenshot').toUpperCase()}</div><label class="upload-zone${S.file ? ' has-file' : ''}" style="${S.file ? 'height:auto;padding:10px;' : ''}"><input type="file" accept="image/*" style="display:none" onchange="setFile(this)" id="receipt-upload">${S.file && S.filePreviewUrl ? `<img src="${S.filePreviewUrl}" style="width:100%;max-height:220px;object-fit:contain;border:1px solid rgba(255,59,0,.3);display:block;margin-bottom:8px"><span style="font-size:9px;letter-spacing:3px;color:${A};font-family:var(--fm)">${S.fileName} ✓</span><span style="font-size:8px;color:var(--text3);letter-spacing:2px;font-family:var(--fm)">${S.lang === 'ar' ? 'اضغط لتغيير الصورة' : 'Click to change'}</span>` : `<span style="font-size:20px;opacity:.35">↑</span><span id="upload-label" style="font-size:9px;letter-spacing:3px;color:var(--text3);font-family:var(--fm)">${tx('clickUpload')}</span><span style="font-size:8px;color:var(--text3);letter-spacing:2px;font-family:var(--fm)">JPG OR PNG · MAX 10MB</span>`}</label></div>` : ''}
       ${S.pay === 'cash' ? `<div style="background:var(--bg3);border:1px solid var(--border);padding:14px 18px;margin:16px 0;display:flex;gap:12px;align-items:flex-start"><span style="font-size:20px;flex-shrink:0">💵</span><div><div style="font-family:var(--fd);font-size:14px;letter-spacing:2px;margin-bottom:4px">${tx('cashOnDelivery')}</div><p style="font-size:12px;color:var(--text2);font-family:Georgia,serif;line-height:1.6">${S.lang === 'ar' ? 'ستدفع كاش عند استلام أوردرك.' : 'Pay in cash when your order arrives.'}</p></div></div>` : ''}
       <div class="order-summary" style="margin:16px 0">
         <div class="summary-tag">${tx('orderSummary')}</div>
@@ -5041,7 +5264,10 @@
     <div style="font-size:9px;color:var(--text3);font-family:var(--fm);letter-spacing:3px;margin-bottom:6px">${od.address}، ${od.city}، ${od.governorate}</div>
     <div style="font-size:9px;color:var(--text3);font-family:var(--fm);letter-spacing:3px;margin-bottom:6px">شحن: <span style="color:${A}">${od.shipping} EGP</span></div>
     <div style="font-size:9px;color:var(--text3);font-family:var(--fm);letter-spacing:3px;margin-bottom:28px">${od.payment_method === 'cash' ? tx('cashOnDelivery') : od.payment_method === 'instapay' ? 'INSTAPAY' : 'VODAFONE CASH'}</div>
-    <button class="btn" onclick="navigate('home')">${S.lang === 'ar' ? 'متابعة التسوق' : 'CONTINUE SHOPPING'}</button>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn" onclick="navigate('home')">${S.lang === 'ar' ? 'متابعة التسوق' : 'CONTINUE SHOPPING'}</button>
+      <button class="btn-outline" onclick="S.trackInput='${S.orderNum}';navigate('track')" style="padding:14px 32px;font-size:13px;letter-spacing:6px">${S.lang === 'ar' ? 'تتبع الأوردر →' : 'TRACK ORDER →'}</button>
+    </div>
   </div>`;
     }
 
@@ -5444,7 +5670,7 @@
       if (bundleId) S.bundleId = bundleId;
       if (page !== 'product') { S.size = null; S.qty = 1; S.imgIdx = 0; S.accordion = null; }
       if (page !== 'bundle') { S.bundleId = null; }
-      if (page === 'checkout') { S.step = 1; S.pay = null; S.discount = 0; S.promo = ''; S.transfer = ''; S.file = null; S.fileName = null; }
+      if (page === 'checkout') { S.step = 1; S.pay = null; S.discount = 0; S.promo = ''; S.promoOpen = false; S.transfer = ''; if (S.filePreviewUrl) { try { URL.revokeObjectURL(S.filePreviewUrl); } catch(e){} } S.file = null; S.fileName = null; S.filePreviewUrl = null; }
       window.scrollTo({ top: 0, behavior: 'instant' });
       if (pushState) _pushHistory({ page, prodId: prodId || null, bundleId: bundleId || null });
       render();
@@ -5457,6 +5683,7 @@
     async function openProduct(id) {
       S.prodId = id; S.page = 'product'; S.size = null; S.qty = 1; S.imgIdx = 0; S.accordion = null; S.color = null;
       S.rv = [id, ...S.rv.filter(x => x !== id)].slice(0, 6);
+      saveRv();
       window.scrollTo({ top: 0, behavior: 'instant' });
       _pushHistory({ page: 'product', prodId: id });
       render();
@@ -5479,9 +5706,11 @@
     }
     function selectGovCity(city) { S.govCity = city; }
     function setFile(input) {
+      // Revoke old preview URL to avoid memory leaks
+      if (S.filePreviewUrl) { try { URL.revokeObjectURL(S.filePreviewUrl); } catch(e){} }
       const f = input.files[0]; S.file = f || null; S.fileName = f ? f.name : null;
-      const lbl = input.closest('.upload-zone');
-      if (lbl) { lbl.classList.toggle('has-file', !!f); const lbEl = document.getElementById('upload-label'); if (lbEl) lbEl.textContent = f ? f.name : tx('clickUpload'); }
+      S.filePreviewUrl = f ? URL.createObjectURL(f) : null;
+      render();
     }
     function setCat(c) { S.catFilter = c; render(); }
     function setSort(v) { S.sortFilter = v; render(); }
@@ -5516,6 +5745,64 @@
       render();
     }
 
+    function doBuyNow() {
+      const p = getProduct(S.prodId);
+      if (!p) return;
+      if (isProductSoldOut(p.id)) { addToast(tx("soldOut"), "error"); return; }
+      if (!S.size) { addToast(`${tx("sizeRequired")} ${pName(p)}`, "error"); return; }
+      const stData = getProductStock(p.id);
+      const stk = stData ? ((stData.stock || {})[S.size] ?? 0) : (p.stock[S.size] || 0);
+      if (stk === 0) { addToast(tx("soldOutSize"), "error"); return; }
+      const colors = getProductColors(p.id);
+      const selColor = colors.find(c => c.id === S.color) || colors[0] || null;
+      const colorName = selColor ? (S.lang === "ar" ? selColor.name_ar : selColor.name) : null;
+      const ex = S.cart.findIndex(i => !i.isBundle && i.id === p.id && i.size === S.size && i.colorId === (S.color || null));
+      if (ex >= 0) S.cart[ex].qty += S.qty;
+      else S.cart.push({ id: p.id, name: p.name, nameAr: p.nameAr, price: p.price, size: S.size, qty: S.qty, colorId: S.color || null, colorName, colorHex: selColor ? selColor.hex : null, bgFrom: p.bgFrom, bgTo: p.bgTo, wm: p.wm, category: p.category, isBundle: false });
+      saveCart(); updateNav();
+      navigate("checkout");
+    }
+
+    // Quick Add to Cart from product card (opens product page if has sizes to pick)
+    function quickAddToCart(pid) {
+      const p = getProduct(pid);
+      if (!p) return;
+      if (isProductSoldOut(p.id)) { addToast(tx('soldOut'), 'error'); return; }
+      if (p.sizes.length === 1 && p.sizes[0] === 'ONE SIZE') {
+        const colors = getProductColors(p.id);
+        const selColor = colors[0] || null;
+        const colorName = selColor ? (S.lang === 'ar' ? selColor.name_ar : selColor.name) : null;
+        const ex = S.cart.findIndex(i => !i.isBundle && i.id === p.id && i.size === 'ONE SIZE');
+        if (ex >= 0) S.cart[ex].qty += 1;
+        else S.cart.push({ id: p.id, name: p.name, nameAr: p.nameAr, price: p.price, size: 'ONE SIZE', qty: 1, colorId: selColor ? selColor.id : null, colorName, colorHex: selColor ? selColor.hex : null, bgFrom: p.bgFrom, bgTo: p.bgTo, wm: p.wm, category: p.category, isBundle: false });
+        saveCart(); updateNav();
+        addToast(`${pName(p)} ${tx('addedToCart')}`, 'success', { label: tx('viewCart'), fn: "navigate('cart')" });
+        render();
+      } else {
+        openProduct(pid);
+      }
+    }
+
+    // Quick Buy Now from product card
+    function quickBuyNow(pid) {
+      const p = getProduct(pid);
+      if (!p) return;
+      if (isProductSoldOut(p.id)) { addToast(tx('soldOut'), 'error'); return; }
+      if (p.sizes.length === 1 && p.sizes[0] === 'ONE SIZE') {
+        const colors = getProductColors(p.id);
+        const selColor = colors[0] || null;
+        const colorName = selColor ? (S.lang === 'ar' ? selColor.name_ar : selColor.name) : null;
+        const ex = S.cart.findIndex(i => !i.isBundle && i.id === p.id && i.size === 'ONE SIZE');
+        if (ex >= 0) S.cart[ex].qty += 1;
+        else S.cart.push({ id: p.id, name: p.name, nameAr: p.nameAr, price: p.price, size: 'ONE SIZE', qty: 1, colorId: selColor ? selColor.id : null, colorName, colorHex: selColor ? selColor.hex : null, bgFrom: p.bgFrom, bgTo: p.bgTo, wm: p.wm, category: p.category, isBundle: false });
+        saveCart(); updateNav();
+        navigate('checkout');
+      } else {
+        openProduct(pid);
+        addToast(S.lang === 'ar' ? 'اختار المقاس الأول ✓' : 'Pick your size first ✓', 'info');
+      }
+    }
+
     function addBundle(bid) {
       const b = getBundle(bid); if (!b) return;
       if (S.cart.some(i => i.isBundle && i.bundleId === bid)) { addToast(S.lang === 'ar' ? 'العرض ده موجود في الكارت بالفعل' : 'Bundle already in cart', 'info'); return; }
@@ -5539,6 +5826,8 @@
     function nextStep() {
       const f = S.form;
       if (!f.name || !f.phone || !f.address) { addToast(tx('allFields'), 'error'); return; }
+      const phoneClean = f.phone.replace(/\s/g, '');
+      if (!/^01[0-9]{9}$/.test(phoneClean)) { addToast(S.lang === 'ar' ? 'رقم التليفون لازم يكون 11 رقم ويبدأ بـ 01' : 'Phone must be 11 digits starting with 01', 'error'); return; }
       if (!S.gov) { addToast(tx('chooseGov'), 'error'); return; }
       if (!S.govCity) { addToast(tx('chooseCity'), 'error'); return; }
       S.step = 2; render();
@@ -5549,6 +5838,28 @@
       const grandTotal = calcGrandTotal();
       const rawTotal = S.cart.reduce((s, i) => s + i.price * i.qty, 0);
       const orderNum = genOrder();
+
+      // Upload receipt image to Supabase Storage (if provided)
+      let receiptUrl = '';
+      if (S.file && S.pay !== 'cash') {
+        try {
+          const ext = S.file.name.split('.').pop().toLowerCase();
+          const filePath = `receipts/${orderNum}.${ext}`;
+          const uploadRes = await fetch(`${SUPABASE_URL}/storage/v1/object/receipts/${orderNum}.${ext}`, {
+            method: 'POST',
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`,
+              'Content-Type': S.file.type,
+              'x-upsert': 'true'
+            },
+            body: S.file
+          });
+          if (uploadRes.ok) {
+            receiptUrl = `${SUPABASE_URL}/storage/v1/object/public/receipts/${orderNum}.${ext}`;
+          }
+        } catch(e) { console.warn('Receipt upload failed:', e); }
+      }
 
       // Build order object for Supabase
       const orderData = {
@@ -5566,6 +5877,7 @@
         total: grandTotal,
         payment_method: S.pay,
         transfer_from: S.pay !== 'cash' ? (S.transfer || '') : '',
+        receipt_url: receiptUrl,
         status: 'new',
         notes: '',
       };
@@ -5706,6 +6018,8 @@ ${itemsStr}
     function loadCart() { try { const c = localStorage.getItem('axs_cart'); if (c) S.cart = JSON.parse(c); } catch (e) { } }
     function saveWish() { try { localStorage.setItem('axs_wish', JSON.stringify(S.wish)); } catch (e) { } }
     function loadWish() { try { const w = localStorage.getItem('axs_wish'); if (w) S.wish = JSON.parse(w); } catch (e) { } }
+    function saveRv() { try { localStorage.setItem('axs_rv', JSON.stringify(S.rv)); } catch (e) { } }
+    function loadRv() { try { const r = localStorage.getItem('axs_rv'); if (r) S.rv = JSON.parse(r); } catch (e) { } }
 
     function sendWhatsApp(od) {
       const itemsStr = od.items.map(item => {
@@ -5908,6 +6222,7 @@ ${itemsStr}
     async function initApp() {
       loadCart();
       loadWish();
+      loadRv();
 
       // Initial history entry so back button stays inside the site
       if (!window.history.state) {
@@ -6027,6 +6342,150 @@ ${itemsStr}
     }
 
     initApp();
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // AXS CINEMATIC ANIMATIONS
+    // ═══════════════════════════════════════════════════════════════════════════════
+
+    // ── 1. PAGE FADEOUT + FADEIN on navigate ─────────────────────────────────────
+    (function patchNavigate() {
+      function withFade(fn) {
+        var main = document.getElementById('main');
+        if (!main) { fn(); return; }
+        main.classList.add('page-exit');
+        setTimeout(function() {
+          main.classList.remove('page-exit');
+          fn();
+        }, 170);
+      }
+
+      // Patch _goToPage (used by back button and all internal navigation)
+      var _orig_goToPage = _goToPage;
+      window._goToPage = function(page, prodId, bundleId, pushState) {
+        withFade(function() { _orig_goToPage(page, prodId, bundleId, pushState); });
+      };
+
+      // Patch navigate (calls _goToPage internally but we override window version)
+      window.navigate = function(page) {
+        window._goToPage(page, null, null, true);
+      };
+
+      // Patch openBundle
+      var _origOpenBundle = window.openBundle;
+      window.openBundle = function(id) {
+        withFade(function() { _origOpenBundle(id); });
+      };
+
+      // openProduct is async — handle separately
+      var _origOpenProduct = window.openProduct;
+      window.openProduct = function(id) {
+        var main = document.getElementById('main');
+        if (!main) { _origOpenProduct(id); return; }
+        main.classList.add('page-exit');
+        setTimeout(function() {
+          main.classList.remove('page-exit');
+          _origOpenProduct(id);
+        }, 170);
+      };
+    })();
+
+    // ── 2. SCROLL REVEAL — IntersectionObserver ───────────────────────────────────
+    (function initReveal() {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+      function attachReveal() {
+        var selectors = [
+          '.pcard', '.bundle-page-card', '.value-card',
+          '.section-header', '.cat-card', '.manifesto-block'
+        ];
+        selectors.forEach(function(sel) {
+          document.querySelectorAll(sel).forEach(function(el, i) {
+            if (!el.classList.contains('reveal')) {
+              el.classList.add('reveal');
+              var delay = Math.min(i % 4, 3);
+              if (delay > 0) el.classList.add('reveal-delay-' + delay);
+              observer.observe(el);
+            }
+          });
+        });
+      }
+
+      // Wrap render to re-attach after every page draw
+      var _origRender = window.render;
+      window.render = function() {
+        _origRender.apply(this, arguments);
+        requestAnimationFrame(attachReveal);
+        // Also mark cached images as loaded
+        requestAnimationFrame(function() {
+          document.querySelectorAll('.pcard-img img, .prod-main img').forEach(function(img) {
+            if (img.complete && img.naturalWidth > 0) {
+              var wrapper = img.closest('.pcard-img > div, .prod-main > div');
+              if (wrapper) wrapper.classList.add('loaded');
+            }
+          });
+        });
+      };
+
+      // First run
+      requestAnimationFrame(attachReveal);
+    })();
+
+    // ── 3. NAVBAR SCROLL EFFECT ───────────────────────────────────────────────────
+    (function initNavbarScroll() {
+      window.addEventListener('scroll', function() {
+        var navbar = document.getElementById('navbar');
+        if (!navbar) return;
+        if (window.scrollY > 40) navbar.classList.add('scrolled');
+        else navbar.classList.remove('scrolled');
+      }, { passive: true });
+    })();
+
+    // ── 3b. STICKY ATC BAR — show after scrolling past the main buttons ──────────
+    (function initStickyAtc() {
+      window.addEventListener('scroll', function() {
+        if (S.page !== 'product') return;
+        var bar = document.getElementById('sticky-atc-bar');
+        if (!bar) return;
+        var qtyAdd = document.querySelector('.qty-add');
+        if (!qtyAdd) { bar.style.transform = 'translateY(100%)'; return; }
+        var rect = qtyAdd.getBoundingClientRect();
+        if (rect.bottom < 0) {
+          bar.style.transform = 'translateY(0)';
+          bar.style.transition = 'transform .25s ease';
+        } else {
+          bar.style.transform = 'translateY(100%)';
+          bar.style.transition = 'transform .25s ease';
+        }
+      }, { passive: true });
+    })();
+
+    // ── 4. BUTTON RIPPLE EFFECT ───────────────────────────────────────────────────
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('.btn');
+      if (!btn) return;
+      var rect = btn.getBoundingClientRect();
+      var size = Math.max(rect.width, rect.height) * 1.4;
+      var ripple = document.createElement('span');
+      ripple.className = 'btn-ripple';
+      ripple.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (e.clientX - rect.left - size / 2) + 'px;top:' + (e.clientY - rect.top - size / 2) + 'px;';
+      btn.appendChild(ripple);
+      ripple.addEventListener('animationend', function() { ripple.remove(); });
+    });
+
+    // ── 5. IMAGE SHIMMER — mark wrapper loaded when img finishes ─────────────────
+    document.addEventListener('load', function(e) {
+      if (e.target.tagName !== 'IMG') return;
+      var wrapper = e.target.parentElement;
+      if (wrapper) wrapper.classList.add('loaded');
+    }, true);
+
   </script>
 </body>
 
